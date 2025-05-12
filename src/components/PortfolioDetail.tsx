@@ -8,7 +8,8 @@ interface PortfolioDetailProps {
 }
 
 export default function PortfolioDetail({ portfolio }: PortfolioDetailProps) {
-  const isLargeScreen = typeof window !== "undefined" ? window.matchMedia("(min-width: 768px)").matches : false
+  // Usar el hook para evitar hydration mismatch
+  const isLargeScreen = useMediaQuery("(min-width: 768px)")
   const sortedComposicionPrincipal = [...portfolio.composicion_principal].sort((a, b) => b.porcentaje - a.porcentaje)
   const sortedComposicionDetallada = [...portfolio.composicion_detallada].sort((a, b) => b.porcentaje - a.porcentaje)
 
