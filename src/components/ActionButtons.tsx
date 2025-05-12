@@ -21,7 +21,7 @@ export default function ActionButtons() {
       <div className="flex">
         <button
           onClick={handleOpenAccount}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 shadow-sm hover:shadow-md inline-flex items-center gap-2 w-auto"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 shadow-sm hover:shadow-md inline-flex items-center gap-2 w-auto cursor-pointer"
         >
           <Handshake className="h-5 w-5" />
           Quiero Asesoramiento

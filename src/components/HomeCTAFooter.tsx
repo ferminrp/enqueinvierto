@@ -33,7 +33,7 @@ export default function HomeCTAFooter() {
             </div>
             <button
               onClick={handleOpenAccount}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 shadow-sm hover:shadow-md inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 shadow-sm hover:shadow-md inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap cursor-pointer"
             >
               <Handshake className="h-5 w-5" />
               Quiero Asesoramiento
@@ -50,7 +50,7 @@ export default function HomeCTAFooter() {
               href={asesorUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-gray-800 hover:bg-gray-100 text-gray-800 font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap"
+              className="border border-gray-800 hover:bg-gray-100 text-gray-800 font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap cursor-pointer"
             >
               <ExternalLink className="h-5 w-5" />
               Conocer Más
@@ -67,7 +67,7 @@ export default function HomeCTAFooter() {
               href={empresaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-gray-800 hover:bg-gray-100 text-gray-800 font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap"
+              className="border border-gray-800 hover:bg-gray-100 text-gray-800 font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap cursor-pointer"
             >
               <ExternalLink className="h-5 w-5" />
               Conocer Más

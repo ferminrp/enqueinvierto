@@ -75,13 +75,33 @@ images: {
   Type '{ id: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
   ```
 - **Solución:**
-  - No declares ni importes un tipo `PageProps` propio en tus archivos de página dinámica.
-  - Tipa los props inline en la función de la página:
+  - En Next.js 15, los parámetros de ruta (`params`) y parámetros de búsqueda (`searchParams`) ahora son Promesas y deben ser esperados (await).
+  - La solución correcta es tipar los params como `Promise<{ id: string }>` y hacer await:
     ```ts
-    export default async function CarteraPage({ params }: { params: { id: string } }) { ... }
+    type Params = Promise<{ id: string }>;
+
+    export default async function CarteraPage(props: { params: Params }) {
+      const { id } = await props.params;
+      // resto del código
+    }
     ```
-  - Asegúrate de que la función sea `async`.
-  - Si el error persiste, borra la carpeta `.next` y asegúrate de que no haya archivos `.d.ts` o tipos generados en conflicto.
+  - Si estás migrando desde versiones anteriores, ejecuta el codemod oficial: `npx @next/codemod@latest next-async-request-api .`
+
+### Despliegue en Cloudflare Workers
+- Se configuró el proyecto con `@opennextjs/cloudflare` (v1.0.2) para facilitar el despliegue en Cloudflare Workers.
+- **Scripts de despliegue** (package.json):
+  ```json
+  "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+  "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
+  ```
+- **URL de despliegue**: https://enqueinvierto.ferminrp.workers.dev
+- **Configuración**: El archivo `wrangler.jsonc` contiene la configuración para el despliegue en Cloudflare Workers.
+- **Variables de entorno**: Se usan a través del archivo `.dev.vars` para el entorno de desarrollo.
+
+### Particularidades de Cloudflare Workers y Next.js
+- Debido a la diferente arquitectura serverless de Cloudflare Workers vs. Vercel, algunas APIs de Next.js pueden comportarse de manera diferente.
+- Se recomienda usar `@opennextjs/cloudflare` para compatibilidad máxima con los Workers de Cloudflare.
+- Las regeneraciones incrementales estáticas (ISR) se manejan de forma diferente - consultar la [documentación de OpenNext para Cloudflare](https://opennext.js.org/cloudflare).
 
 ### Modal de redirección y assets locales
 - Para máxima performance y compatibilidad, las imágenes de marca (ej: logo Quaestus) deben estar en la carpeta `public` y usarse como `/quaestus.webp` en los componentes.

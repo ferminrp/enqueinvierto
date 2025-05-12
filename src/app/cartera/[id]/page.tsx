@@ -5,8 +5,12 @@ import PortfolioDetail from "@/components/PortfolioDetail"
 import CTAFooter from "@/components/CTAFooter"
 import LegalFooter from "@/components/LegalFooter"
 
-export default async function CarteraPage({ params }: { params: { id: string } }) {
-  const portfolioId = Number.parseInt(params.id)
+type Params = Promise<{ id: string }>;
+
+export default async function CarteraPage(props: { params: Params }) {
+  const { id } = await props.params;
+  const portfolioId = Number.parseInt(id)
+  
   if (isNaN(portfolioId) || portfolioId < 0 || portfolioId >= portfolios.length) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -21,6 +25,7 @@ export default async function CarteraPage({ params }: { params: { id: string } }
       </div>
     )
   }
+  
   const portfolio = portfolios[portfolioId]
   return (
     <main className="min-h-screen relative overflow-hidden">
