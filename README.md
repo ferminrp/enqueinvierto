@@ -1,4 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Enqueinvierto Clone - Quaestus Wealth Management
+
+Este proyecto es un clon de la web [enqueinvierto.ar](https://enqueinvierto.ar/) desarrollado con Next.js y desplegado en Cloudflare Pages/Workers. El objetivo es replicar la experiencia de usuario y las funcionalidades principales, adaptando la arquitectura a las limitaciones y mejores prácticas de Cloudflare ([ver guía](https://developers.cloudflare.com/workers/frameworks/framework-guides/nextjs/)).
+
+## Objetivo del Proyecto
+
+- Clonar la landing principal y las páginas de detalle de carteras de inversión recomendadas por Quaestus Advisory S.A.
+- Permitir la navegación entre las carteras y mostrar la composición principal y detallada de cada una.
+- Incluir llamados a la acción y footer institucional.
+- Documentar todo el proceso y las decisiones técnicas.
+
+## Tareas Principales
+
+- [ ] **Documentar la estructura y el objetivo del proyecto en este README**
+- [ ] **Crear archivo de datos**: `src/data/portfolios.ts` con el JSON de carteras
+- [ ] **Página Home** (`/`):
+  - [ ] Mostrar cards/lista de las 9 carteras
+  - [ ] Cards clickeables que llevan al detalle
+  - [ ] Sección de asesoramiento y llamados a la acción
+  - [ ] Footer institucional
+- [ ] **Página de Detalle de Cartera** (`/cartera/[id]`):
+  - [ ] Mostrar nombre, fecha, composición principal y detallada
+  - [ ] Llamado a la acción y footer legal
+  - [ ] Breadcrumb y botón para volver
+- [ ] **Componentes reutilizables**:
+  - [ ] `PortfolioCard` (card de cartera)
+  - [ ] `PortfolioList` (lista de carteras)
+  - [ ] `PortfolioDetail` (detalle de cartera)
+  - [ ] `CTAFooter` (llamado a la acción)
+  - [ ] `LegalFooter` (footer legal)
+- [ ] **Compatibilidad Cloudflare**:
+  - [ ] Usar rutas estáticas y generación en build
+  - [ ] Evitar SSR innecesario
+  - [ ] Imports relativos y paths compatibles
+- [ ] **Documentar cualquier limitación, workaround o decisión relevante**
+
+---
 
 ## Getting Started
 

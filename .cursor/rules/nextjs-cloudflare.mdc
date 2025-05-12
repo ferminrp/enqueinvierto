@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+We are deploying a nextjs application on cloudflare. It has certain limitations and restrictions vs working on vercel. Please consult the documentation whenever you have doubts https://developers.cloudflare.com/workers/frameworks/framework-guides/nextjs/
+
+Document everything you learn about the project and business on the readme.md file for future reference
