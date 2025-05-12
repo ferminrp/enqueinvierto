@@ -11,7 +11,7 @@ type PageProps = {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default function CarteraPage({ params }: PageProps) {
+export default async function CarteraPage({ params }: PageProps) {
   const portfolioId = Number.parseInt(params.id)
   if (isNaN(portfolioId) || portfolioId < 0 || portfolioId >= portfolios.length) {
     return (
