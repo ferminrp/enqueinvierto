@@ -11,28 +11,83 @@ Este proyecto es un clon de la web [enqueinvierto.ar](https://enqueinvierto.ar/)
 
 ## Tareas Principales
 
-- [ ] **Documentar la estructura y el objetivo del proyecto en este README**
-- [ ] **Crear archivo de datos**: `src/data/portfolios.ts` con el JSON de carteras
-- [ ] **Página Home** (`/`):
-  - [ ] Mostrar cards/lista de las 9 carteras
-  - [ ] Cards clickeables que llevan al detalle
-  - [ ] Sección de asesoramiento y llamados a la acción
-  - [ ] Footer institucional
-- [ ] **Página de Detalle de Cartera** (`/cartera/[id]`):
-  - [ ] Mostrar nombre, fecha, composición principal y detallada
-  - [ ] Llamado a la acción y footer legal
-  - [ ] Breadcrumb y botón para volver
-- [ ] **Componentes reutilizables**:
-  - [ ] `PortfolioCard` (card de cartera)
-  - [ ] `PortfolioList` (lista de carteras)
-  - [ ] `PortfolioDetail` (detalle de cartera)
-  - [ ] `CTAFooter` (llamado a la acción)
-  - [ ] `LegalFooter` (footer legal)
-- [ ] **Compatibilidad Cloudflare**:
-  - [ ] Usar rutas estáticas y generación en build
-  - [ ] Evitar SSR innecesario
-  - [ ] Imports relativos y paths compatibles
+- [x] **Documentar la estructura y el objetivo del proyecto en este README**
+- [x] **Crear archivo de datos**: `src/data/portfolios.ts` con el JSON de carteras
+- [x] **Página Home** (`/`):
+  - [x] Mostrar cards/lista de las 9 carteras
+  - [x] Cards clickeables que llevan al detalle
+  - [x] Sección de asesoramiento y llamados a la acción
+  - [x] Footer institucional
+- [x] **Página de Detalle de Cartera** (`/cartera/[id]`):
+  - [x] Mostrar nombre, fecha, composición principal y detallada
+  - [x] Llamado a la acción y footer legal
+  - [x] Breadcrumb y botón para volver
+- [x] **Componentes reutilizables**:
+  - [x] `PortfolioCard` (card de cartera)
+  - [x] `PortfolioGrid` (lista de carteras)
+  - [x] `PortfolioDetail` (detalle de cartera)
+  - [x] `CTAFooter` (llamado a la acción)
+  - [x] `HomeCTAFooter` (footer CTA home)
+  - [x] `ActionButtons` (botón asesoramiento home)
+  - [x] `RedirectPage` (modal seguro de redirección)
+  - [x] `LegalFooter` (footer legal)
+- [x] **Compatibilidad Cloudflare**:
+  - [x] Usar rutas estáticas y generación en build
+  - [x] Evitar SSR innecesario
+  - [x] Imports relativos y paths compatibles
+  - [x] Configuración de imágenes externas (`ik.imagekit.io`) en `next.config.ts`
+- [x] **Instalación de dependencias necesarias**:
+  - [x] `lucide-react` para íconos
+  - [x] `framer-motion` para animaciones
+- [x] **Solución de errores de tipado y build en Next.js 15+**
 - [ ] **Documentar cualquier limitación, workaround o decisión relevante**
+
+---
+
+## Troubleshooting y Decisiones Técnicas
+
+### Deploy en Cloudflare Pages/Workers
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy` (solo si usas Workers directamente; en Pages puede omitirse)
+- **Root directory:** `/`
+- **Variables de entorno:** agregar si se usan APIs externas o claves.
+
+### Imágenes externas
+- Se debe agregar el dominio `ik.imagekit.io` en `next.config.ts` para que Next.js permita servir imágenes externas con `next/image`:
+
+```js
+images: {
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'ik.imagekit.io',
+      port: '',
+      pathname: '/**',
+    },
+  ],
+},
+```
+
+### Problema de tipos con PageProps en Next.js 15+
+- **Error:**
+  ```
+  Type error: Type 'PageProps' does not satisfy the constraint ...
+  Type '{ id: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+  ```
+- **Solución:**
+  - No declares ni importes un tipo `PageProps` propio en tus archivos de página dinámica.
+  - Tipa los props inline en la función de la página:
+    ```ts
+    export default async function CarteraPage({ params }: { params: { id: string } }) { ... }
+    ```
+  - Asegúrate de que la función sea `async`.
+  - Si el error persiste, borra la carpeta `.next` y asegúrate de que no haya archivos `.d.ts` o tipos generados en conflicto.
+
+### Modal de redirección y assets locales
+- Para máxima performance y compatibilidad, las imágenes de marca (ej: logo Quaestus) deben estar en la carpeta `public` y usarse como `/quaestus.webp` en los componentes.
+
+### Otros
+- Si usas features avanzadas de Next.js (middleware, edge, etc.), revisa la [documentación de Cloudflare](https://developers.cloudflare.com/workers/frameworks/framework-guides/nextjs/) para compatibilidad.
 
 ---
 
