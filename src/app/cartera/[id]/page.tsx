@@ -5,13 +5,7 @@ import PortfolioDetail from "@/components/PortfolioDetail"
 import CTAFooter from "@/components/CTAFooter"
 import LegalFooter from "@/components/LegalFooter"
 
-// Definir el tipo de props compatible con Next.js 15+
-type PageProps = {
-  params: { id: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
-
-export default async function CarteraPage({ params }: PageProps) {
+export default async function CarteraPage({ params }: { params: { id: string } }) {
   const portfolioId = Number.parseInt(params.id)
   if (isNaN(portfolioId) || portfolioId < 0 || portfolioId >= portfolios.length) {
     return (
