@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2025-05-13T14:58:25.382Z",
+  "sdkVersion": "8.2.3",
+  "inputHash": "f1cfc53894c05b8180a6b6892aca7d2b",
+  "schemaHash": "b2e5720a3237a3a2c298e01c3d40ed1d",
+  "resolvedRef": {
+    "repoHash": "e0df059f",
+    "type": "branch",
+    "ref": "main",
+    "createSuggestedBranchLink": null,
+    "id": "msspTcJpMPfOPTg5O00aI",
+    "name": "main",
+    "createdAt": "2025-05-13T12:09:33.554Z",
+    "headCommitId": "EDwzkvycXzOGW5iYpXb4U",
+    "isDefault": true,
+    "workingRootBlockId": "JVT4YiXCVEhme6C6JrdHy"
+  }
+}

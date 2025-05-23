@@ -5,7 +5,7 @@ export default function LegalFooter() {
     <div className="w-full py-8 mt-8 flex flex-col items-center">
       <div className="mb-4">
         <Image
-          src="https://ik.imagekit.io/ferminrp/enqueinvierto/quaestus?updatedAt=1745599861854&tr=w-500,q-100"
+          src="https://compara-ii.b-cdn.net/enqueinvierto/LogoQuaestus_H_Transp.png"
           alt="Quaestus Wealth Management"
           width={200}
           height={67}

@@ -1,0 +1,570 @@
+enum AnalyticsKeyScope {
+  query
+  send
+}
+
+"""
+{"schemaType":"({\n  name: string;\n  required: boolean;\n  placeholder?: string;\n  defaultValue?: string;\n  helpText?: string\n} & {\n  id: string;\n  label: string\n} & ({\n  type: \"text\" | \"textarea\" | \"number\" | \"file\" | \"date\" | \"datetime\" | \"email\" | \"checkbox\" | \"hidden\"\n} | {\n  type: \"select\" | \"radio\";\n  options: string[];\n  multiple: boolean\n}))[]"}
+"""
+scalar BSHBEventSchema
+
+"""{"schemaType":"RichTextNode[]"}"""
+scalar BSHBRichTextContentSchema
+
+"""{"schemaType":"RichTextTocNode[]"}"""
+scalar BSHBRichTextTOCSchema
+
+type BaseRichTextJson implements RichTextJson {
+  blocks: String!
+  content: BSHBRichTextContentSchema!
+  toc: BSHBRichTextTOCSchema!
+}
+
+type BlockAudio implements MediaBlock {
+  """
+  The duration of the audio in seconds. If the duration is not available, it will be estimated based on the file size.
+  """
+  duration: Float!
+  fileName: String!
+  fileSize: Int!
+  lastModified: Float!
+  mimeType: String!
+  url: String!
+}
+
+type BlockCodeSnippet {
+  allowedLanguages: [CodeSnippetLanguage!]!
+  code: String!
+  html(
+    """Theme for the code snippet"""
+    theme: String = "github-dark"
+  ): String! @deprecated(reason: "Figuring out the correct api.")
+  language: CodeSnippetLanguage!
+}
+
+type BlockColor {
+  b: Int!
+  g: Int!
+  hex: String!
+  hsl: String!
+  r: Int!
+  rgb: String!
+}
+
+interface BlockDocument {
+  _analyticsKey(
+    """
+    The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+    
+    Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+    """
+    scope: AnalyticsKeyScope = send
+  ): String!
+  _dashboardUrl: String!
+  _id: String!
+  _idPath: String!
+  _slug: String!
+  _slugPath: String!
+  _sys: BlockDocumentSys!
+  _title: String!
+}
+
+type BlockDocumentSys {
+  apiNamePath: String!
+  createdAt: String!
+  hash: String!
+  id: ID!
+  idPath: String!
+  lastModifiedAt: String!
+  slug: String!
+  slugPath: String!
+  title: String!
+}
+
+type BlockFile implements MediaBlock {
+  fileName: String!
+  fileSize: Int!
+  lastModified: Float!
+  mimeType: String!
+  url: String!
+}
+
+type BlockImage implements MediaBlock {
+  alt: String
+  aspectRatio: String!
+  blurDataURL: String!
+  fileName: String!
+  fileSize: Int!
+  height: Int!
+  lastModified: Float!
+  mimeType: String!
+  placeholderURL: String! @deprecated(reason: "Renamed to `blurDataURL` to match Next.js Image's naming convention.")
+  rawUrl: String! @deprecated(reason: "Use `url` instead.")
+  thumbhash: String!
+
+  "This field is used to generate the image URL with the provided options. The options are passed as arguments. For example, if you want to resize the image to 200x200 pixels, you can use the following query:\n\n```graphql\n{\n  imageBlock {\n    url(width: 200, height: 200)\n  }\n}\n```\n\nThis will return the URL with the width and height set to 200 pixels.\n\nBaseHub uses Cloudflare for image resizing. Check out [all available options in their docs](https://developers.cloudflare.com/images/transform-images/transform-via-workers/#fetch-options).\n"
+  url(anim: String, background: String, blur: Int, border: String, brightness: Int, compression: String, contrast: Int, dpr: Int, fit: String, format: String, gamma: String, gravity: String, height: Int, metadata: String, quality: Int, rotate: String, sharpen: String, trim: String, width: Int): String!
+  width: Int!
+}
+
+interface BlockList implements BlockDocument {
+  _analyticsKey(
+    """
+    The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+    
+    Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+    """
+    scope: AnalyticsKeyScope = send
+  ): String!
+  _dashboardUrl: String!
+  _id: String!
+  _idPath: String!
+  _meta: ListMeta!
+
+  """The key used to search from the frontend."""
+  _searchKey: String!
+  _slug: String!
+  _slugPath: String!
+  _sys: BlockDocumentSys!
+  _title: String!
+}
+
+type BlockOgImage {
+  height: Int!
+  url: String!
+  width: Int!
+}
+
+"""Rich text block"""
+interface BlockRichText {
+  html(
+    """
+    It automatically generates a unique id for each heading present in the HTML. Enabled by default.
+    """
+    slugs: Boolean = true
+
+    """Inserts a table of contents at the beginning of the HTML."""
+    toc: Boolean = false
+  ): String!
+  json: RichTextJson!
+  markdown: String!
+  plainText: String!
+  readingTime(
+    """Words per minute, defaults to average 183wpm"""
+    wpm: Int = 183
+  ): Int!
+}
+
+type BlockVideo implements MediaBlock {
+  aspectRatio: String!
+
+  """
+  The duration of the video in seconds. If the duration is not available, it will be estimated based on the file size.
+  """
+  duration: Float!
+  fileName: String!
+  fileSize: Int!
+  height: Int!
+  lastModified: Float!
+  mimeType: String!
+  url: String!
+  width: Int!
+}
+
+"""{"schemaType":"B_Language"}"""
+scalar CodeSnippetLanguage
+
+type Content implements BlockRichText {
+  html(
+    """
+    It automatically generates a unique id for each heading present in the HTML. Enabled by default.
+    """
+    slugs: Boolean = true
+
+    """Inserts a table of contents at the beginning of the HTML."""
+    toc: Boolean = false
+  ): String!
+  json: ContentRichText!
+  markdown: String!
+  plainText: String!
+  readingTime(
+    """Words per minute, defaults to average 183wpm"""
+    wpm: Int = 183
+  ): Int!
+}
+
+type ContentRichText implements RichTextJson {
+  content: BSHBRichTextContentSchema!
+  toc: BSHBRichTextTOCSchema!
+}
+
+input DateFilter {
+  eq: DateTime
+  isAfter: DateTime
+  isBefore: DateTime
+  isNull: Boolean
+  neq: DateTime
+  onOrAfter: DateTime
+  onOrBefore: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type GetUploadSignedURL {
+  signedURL: String!
+  uploadURL: String!
+}
+
+type Glosario implements BlockDocument & BlockList {
+  _analyticsKey(
+    """
+    The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+    
+    Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+    """
+    scope: AnalyticsKeyScope = send
+  ): String!
+  _dashboardUrl: String!
+  _id: String!
+  _idPath: String!
+  _meta: ListMeta!
+
+  """The key used to search from the frontend."""
+  _searchKey: String!
+  _slug: String!
+  _slugPath: String!
+  _sys: BlockDocumentSys!
+  _title: String!
+
+  """
+  Returns the first item in the list, or null if the list is empty. Useful when you expect only one result.
+  """
+  item: GlosarioItem
+
+  """
+  Returns the list of items after filtering and paginating according to the arguments sent by the client.
+  """
+  items: [GlosarioItem!]!
+}
+
+""""""
+type GlosarioItem implements BlockDocument {
+  _analyticsKey(
+    """
+    The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+    
+    Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+    """
+    scope: AnalyticsKeyScope = send
+  ): String!
+  _dashboardUrl: String!
+  _id: String!
+  _idPath: String!
+  _slug: String!
+  _slugPath: String!
+  _sys: BlockDocumentSys!
+  _title: String!
+  content: Content
+
+  """ISO 8601 date string."""
+  date: String
+  icon: String
+  slug: String
+}
+
+input GlosarioItemFilterInput {
+  AND: GlosarioItemFilterInput
+  OR: GlosarioItemFilterInput
+  _id: StringFilter
+  _slug: StringFilter
+  _sys_apiNamePath: StringFilter
+  _sys_createdAt: DateFilter
+  _sys_hash: StringFilter
+  _sys_id: StringFilter
+  _sys_idPath: StringFilter
+  _sys_lastModifiedAt: DateFilter
+  _sys_slug: StringFilter
+  _sys_slugPath: StringFilter
+  _sys_title: StringFilter
+  _title: StringFilter
+  date: DateFilter
+  icon: StringFilter
+  slug: StringFilter
+}
+
+enum GlosarioItemOrderByEnum {
+  _sys_createdAt__ASC
+  _sys_createdAt__DESC
+  _sys_hash__ASC
+  _sys_hash__DESC
+  _sys_id__ASC
+  _sys_id__DESC
+  _sys_lastModifiedAt__ASC
+  _sys_lastModifiedAt__DESC
+  _sys_slug__ASC
+  _sys_slug__DESC
+  _sys_title__ASC
+  _sys_title__DESC
+  content__ASC
+  content__DESC
+  date__ASC
+  date__DESC
+  icon__ASC
+  icon__DESC
+  slug__ASC
+  slug__DESC
+}
+
+scalar JSON
+
+input ListFilter {
+  isEmpty: Boolean
+  length: Int
+}
+
+type ListMeta {
+  """Number of items after applying filters but before pagination"""
+  filteredCount: Int!
+
+  """Total number of items in collection before any filtering/pagination"""
+  totalCount: Int!
+}
+
+interface MediaBlock {
+  fileName: String!
+  fileSize: Int!
+  lastModified: Float!
+  mimeType: String!
+  url: String!
+}
+
+union MediaBlockUnion = BlockAudio | BlockFile | BlockImage | BlockVideo
+
+type Mutation {
+  "Returns a signed url and an upload url so that you can upload files into your repository.\n\nExample usage with JavaScript:\n```js\nasync function handleUpload(file: File) {\n  const { getUploadSignedURL } = await basehub().mutation({\n    getUploadSignedURL: {\n      __args: { fileName: file.name },\n      signedURL: true,\n      uploadURL: true,\n    }\n  })\n\n  const { signedURL, uploadURL } = getUploadSignedURL\n\n  await fetch(signedURL, { method: 'PUT', body: file })\n\n  // done! do something with the uploadURL now\n}\n```\n"
+  getUploadSignedURL(
+    """SHA256 hash of the file. Used for reusing existing files."""
+    fileHash: String
+
+    """The file name"""
+    fileName: String!
+  ): GetUploadSignedURL!
+
+  """
+  Start a job that can be awaited and the result given directly. Under the hood, it runs `transactionAsync` and polls for the result until it is available. You can pass a `timeout` argument, the default being 30_000ms.
+  """
+  transaction(
+    """Auto make a commit in your Repo with the specified message."""
+    autoCommit: String
+
+    """Transaction data."""
+    data: String!
+
+    """Skip running workflows and event subscribers. Defaults to false."""
+    skipWorkflows: Boolean = false
+
+    """Timeout in milliseconds."""
+    timeout: Int = 600000
+  ): TransactionStatus!
+
+  """
+  Start an asynchronous job to mutate BaseHub data. Returns a transaction ID which you can use to get the result of the job.
+  """
+  transactionAsync(
+    """Auto make a commit in your Repo with the specified message."""
+    autoCommit: String
+
+    """Transaction data."""
+    data: String!
+
+    """Skip running workflows and event subscribers. Defaults to false."""
+    skipWorkflows: Boolean = false
+  ): String!
+  transactionStatus(
+    """Transaction ID"""
+    id: String!
+  ): TransactionStatus!
+}
+
+input NumberFilter {
+  eq: Float
+  gt: Float
+  gte: Float
+  isNull: Boolean
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+type Query {
+  """
+  Query across all of the instances of a component. Pass in filters and sorts if you want, and get each instance via the `items` key.
+  """
+  _componentInstances: _components!
+
+  """The structure of the repository. Used by START."""
+  _structure(
+    """The format of the structure."""
+    format: _StructureFormatEnum = xml
+
+    """The format of the structure."""
+    resolveTargetsWith: _ResolveTargetsWithEnum
+
+    """A target block to forcefully resolve in the schema."""
+    targetBlock: TargetBlock
+
+    """Whether to include constraints in the structure."""
+    withConstraints: Boolean = true
+
+    """Whether to include IDs in the structure."""
+    withIDs: Boolean = true
+
+    """Whether to include type options in the structure."""
+    withTypeOptions: Boolean = true
+  ): JSON!
+  _sys: RepoSys!
+  glosario(
+    """Filter by a field."""
+    filter: GlosarioItemFilterInput
+
+    """Limit the number of items returned. Defaults to 500."""
+    first: Int = 500
+
+    """Order by a field."""
+    orderBy: GlosarioItemOrderByEnum
+
+    """Skip the first n items."""
+    skip: Int = 0
+  ): Glosario!
+}
+
+type RepoSys {
+  dashboardUrl: String!
+  forkUrl: String!
+  hash: String!
+  id: ID!
+  slug: String!
+  title: String!
+}
+
+interface RichTextJson {
+  content: BSHBRichTextContentSchema!
+  toc: BSHBRichTextTOCSchema!
+}
+
+input SelectFilter {
+  excludes: String
+  excludesAll: [String!]
+  includes: String
+  includesAll: [String!]
+  includesAny: [String!]
+  isEmpty: Boolean
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  eq: String
+  isNull: Boolean
+  matches: StringMatchesFilter
+  notEq: String
+  startsWith: String
+}
+
+input StringMatchesFilter {
+  caseSensitive: Boolean = true
+  pattern: String!
+}
+
+input TargetBlock {
+  focus: Boolean
+  id: String!
+  label: String!
+}
+
+type TransactionStatus {
+  """Duration in milliseconds."""
+  duration: Int
+  endedAt: String
+  id: String!
+  message: String
+  startedAt: String!
+  status: TransactionStatusEnum!
+}
+
+enum TransactionStatusEnum {
+  Cancelled
+  Completed
+  Failed
+  Running
+  Scheduled
+}
+
+type Variant {
+  apiName: String!
+  color: String!
+  id: String!
+  isDefault: Boolean!
+  label: String!
+}
+
+enum _ResolveTargetsWithEnum {
+  id
+  objectName
+}
+
+enum _StructureFormatEnum {
+  json
+  xml
+}
+
+type _components {
+  glosarioItem(
+    """Filter by a field."""
+    filter: GlosarioItemFilterInput
+
+    """Limit the number of items returned. Defaults to 500."""
+    first: Int = 500
+
+    """Order by a field."""
+    orderBy: GlosarioItemOrderByEnum
+
+    """Skip the first n items."""
+    skip: Int = 0
+  ): glosarioItem_AsList!
+}
+
+type glosarioItem_AsList implements BlockDocument & BlockList {
+  _analyticsKey(
+    """
+    The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+    
+    Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+    """
+    scope: AnalyticsKeyScope = send
+  ): String!
+  _dashboardUrl: String!
+  _id: String!
+  _idPath: String!
+  _meta: ListMeta!
+
+  """The key used to search from the frontend."""
+  _searchKey: String!
+  _slug: String!
+  _slugPath: String!
+  _sys: BlockDocumentSys!
+  _title: String!
+
+  """
+  Returns the first item in the list, or null if the list is empty. Useful when you expect only one result.
+  """
+  item: GlosarioItem
+
+  """
+  Returns the list of items after filtering and paginating according to the arguments sent by the client.
+  """
+  items: [GlosarioItem!]!
+}

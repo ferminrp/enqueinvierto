@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'compara-ii.b-cdn.net',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
