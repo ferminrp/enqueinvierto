@@ -1,15 +1,19 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { a as renderers } from './chunks/_@astro-renderers_b2QWdt7v.mjs';
-import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter__lLyzjbj.mjs';
-import { manifest } from './manifest_Bam_KlW5.mjs';
+import { a as renderers } from './chunks/_@astro-renderers_9fjT-zeb.mjs';
+import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_CBDC5m15.mjs';
+import { manifest } from './manifest_Tg9Prlyi.mjs';
 
 const serverIslandMap = new Map();;
 
 const _page0 = () => import('./pages/cartera/_id_.astro.mjs');
-const _page1 = () => import('./pages/index.astro.mjs');
+const _page1 = () => import('./pages/glosario/_slug_.astro.mjs');
+const _page2 = () => import('./pages/glosario.astro.mjs');
+const _page3 = () => import('./pages/index.astro.mjs');
 const pageMap = new Map([
     ["src/pages/cartera/[id].astro", _page0],
-    ["src/pages/index.astro", _page1]
+    ["src/pages/glosario/[slug].astro", _page1],
+    ["src/pages/glosario/index.astro", _page2],
+    ["src/pages/index.astro", _page3]
 ]);
 
 const _manifest = Object.assign(manifest, {

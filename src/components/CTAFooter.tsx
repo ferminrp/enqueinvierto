@@ -20,9 +20,9 @@ export default function CTAFooter() {
         <div className="p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="space-y-2 md:max-w-[70%]">
-              <h3 className="text-xl font-bold text-gray-800">¿Te interesa implementar esta cartera?</h3>
+              <h3 className="text-xl font-bold text-gray-800">¿Necesitás asesoramiento financiero?</h3>
               <p className="text-gray-600">
-                Nuestros asesores pueden ayudarte a implementar esta estrategia de inversión adaptada a tu perfil.
+                En Quaestus Advisory (AAGI N° 1098 CNV) te podemos ayudar. Estructuramos, ejecutamos y administramos carteras de inversión.
               </p>
             </div>
             <button

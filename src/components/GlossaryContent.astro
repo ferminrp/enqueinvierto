@@ -1,0 +1,75 @@
+---
+// Component to style glossary content with Notion-like styling
+---
+
+<div class="notion-content">
+  <slot />
+</div>
+
+<style>
+  /* Skip the first h1 since it's already in the header */
+  .notion-content :global(h1:first-child) {
+    display: none;
+  }
+  
+  /* Notion-style headings - clean and minimal */
+  .notion-content :global(h2) {
+    @apply text-2xl font-semibold text-gray-900 mt-12 mb-4 scroll-mt-8;
+  }
+  
+  .notion-content :global(h3) {
+    @apply text-xl font-medium text-gray-800 mt-8 mb-3 scroll-mt-8;
+  }
+  
+  .notion-content :global(h4) {
+    @apply text-lg font-medium text-gray-700 mt-6 mb-2 scroll-mt-8;
+  }
+  
+  /* Clean paragraph styling */
+  .notion-content :global(p) {
+    @apply mb-4 text-gray-700 leading-relaxed;
+  }
+  
+  /* Subtle emphasis for strong text */
+  .notion-content :global(strong) {
+    @apply font-semibold text-gray-900;
+  }
+  
+  /* Clean list styling */
+  .notion-content :global(ul),
+  .notion-content :global(ol) {
+    @apply my-4 pl-6;
+  }
+  
+  .notion-content :global(li) {
+    @apply mb-2 text-gray-700 leading-relaxed;
+  }
+  
+  /* Simple table styling */
+  .notion-content :global(table) {
+    @apply w-full my-6 border-collapse;
+  }
+  
+  .notion-content :global(thead th) {
+    @apply bg-gray-50 border border-gray-200 p-3 text-left font-medium text-gray-900;
+  }
+  
+  .notion-content :global(tbody td) {
+    @apply border border-gray-200 p-3 text-gray-700;
+  }
+  
+  /* Minimal code styling */
+  .notion-content :global(code) {
+    @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+  
+  /* Clean blockquote */
+  .notion-content :global(blockquote) {
+    @apply border-l-4 border-gray-300 pl-4 my-4 text-gray-600 italic;
+  }
+  
+  /* Simple link styling */
+  .notion-content :global(a) {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+</style> 

@@ -8,10 +8,10 @@
     "/_astro/*",
     "/file.svg",
     "/globe.svg",
-    "/next.svg",
     "/quaestus.webp",
     "/vercel.svg",
     "/window.svg",
-    "/cartera/*"
+    "/cartera/*",
+    "/glosario/*"
   ]
 }

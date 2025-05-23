@@ -70,6 +70,7 @@ npm run deploy
 ### ✅ Completado
 - [x] **Página Home**: Grid de 9 carteras de inversión
 - [x] **Páginas de Detalle**: Composición principal y detallada
+- [x] **Glosario Financiero**: Conceptos y términos explicados con diseño tipo Notion
 - [x] **Componentes Interactivos**: Modales, animaciones, CTAs
 - [x] **SEO Optimizado**: Meta tags completos
 - [x] **Responsive Design**: Adaptado a todos los dispositivos
@@ -87,6 +88,72 @@ npm run deploy
 - **CTAFooter**: CTA específico para páginas de detalle
 - **RedirectPage**: Modal seguro de redirección
 - **LegalFooter**: Footer institucional
+- **MarkdownContent**: Renderizador de contenido markdown para el glosario
+
+### 📚 Glosario Financiero
+
+El glosario utiliza **Astro Content Collections** para una gestión eficiente del contenido:
+
+#### **Características**
+- **Content Collections**: Gestión nativa de Astro con validación de esquemas
+- **Archivos Markdown**: Cada entrada es un archivo `.md` independiente
+- **Frontmatter tipado**: Validación automática con Zod
+- **Diseño tipo Notion**: Interfaz limpia y minimalista
+- **Búsqueda en tiempo real**: Filtrado instantáneo por términos
+- **Filtros por categoría**: Organización por tipo de concepto
+- **Navegación intuitiva**: Breadcrumbs y enlaces relacionados
+- **Responsive**: Optimizado para todos los dispositivos
+
+#### **Estructura de Content Collections**
+```typescript
+// src/content/config.ts
+const glossaryCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.date(),
+    icon: z.string(),
+    summary: z.string(),
+    category: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    difficulty: z.enum(['Principiante', 'Intermedio', 'Avanzado']).optional(),
+  }),
+});
+```
+
+#### **Estructura de Archivos**
+```
+src/content/glossary/
+├── dca-dollar-cost-averaging.md
+├── etf-exchange-traded-fund.md
+└── diversificacion.md
+```
+
+#### **Conceptos Incluidos**
+- **DCA (Dollar Cost Averaging)**: Estrategia de inversión periódica
+- **ETF (Exchange Traded Fund)**: Fondos cotizados en bolsa
+- **Diversificación**: Gestión de riesgo en portafolios
+
+#### **URLs del Glosario**
+- **Índice**: `/glosario`
+- **Entradas individuales**: `/glosario/[slug]`
+- **Ejemplo**: `/glosario/dca-dollar-cost-averaging`
+
+#### **Ventajas de Content Collections**
+- **Validación automática**: Esquemas Zod previenen errores
+- **TypeScript nativo**: Tipado completo en tiempo de compilación
+- **Rendimiento optimizado**: Procesamiento en build time
+- **Generación estática**: Todas las páginas pre-renderizadas
+- **SEO optimizado**: Meta tags específicos por entrada
+- **Tiempo de lectura**: Cálculo automático basado en palabras
+- **Compartir**: Funcionalidad nativa de compartir/copiar enlace
+- **Conceptos relacionados**: Sugerencias automáticas por categoría
+
+#### **Agregar Nuevas Entradas**
+1. Crear archivo `.md` en `src/content/glossary/`
+2. Agregar frontmatter con el esquema requerido
+3. Escribir contenido en markdown
+4. Build automático genera las páginas
 
 ## 🌐 Despliegue en Cloudflare
 

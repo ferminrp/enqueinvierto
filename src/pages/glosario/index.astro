@@ -1,0 +1,221 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { BookOpen, Search, Tag, Calendar, ArrowRight, BarChart3, TrendingUp, PieChart, Target, Calculator } from 'lucide-react';
+
+const glossaryEntries = await getCollection('glossary');
+
+const title = "Glosario Financiero | Quaestus Wealth Management";
+const description = "Conceptos y términos financieros explicados de forma clara y práctica. Aprende sobre inversiones, estrategias y instrumentos financieros.";
+
+const categories = [...new Set(glossaryEntries.map(entry => entry.data.category).filter(Boolean))];
+const sortedEntries = glossaryEntries.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// Get icon component
+const getIconComponent = (iconName: string) => {
+  const iconMap: { [key: string]: any } = {
+    'bar-chart': BarChart3,
+    'trending-up': TrendingUp,
+    'pie-chart': PieChart,
+    'book-open': BookOpen,
+    'calculator': Calculator,
+    'target': Target
+  };
+  return iconMap[iconName] || BookOpen;
+};
+---
+
+<Layout title={title} description={description}>
+  <main class="min-h-screen bg-white">
+    <!-- Header -->
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 border-b border-gray-200">
+      <div class="container mx-auto px-4 py-16 md:py-20">
+        <div class="max-w-4xl mx-auto text-center">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6">
+            <BookOpen className="h-8 w-8 text-white" />
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Glosario Financiero
+          </h1>
+          <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Conceptos y términos financieros explicados de forma clara y práctica. 
+            Construye tu conocimiento paso a paso.
+          </p>
+          
+          <!-- Search Bar -->
+          <div class="relative max-w-md mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Buscar términos..."
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              id="searchInput"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <div class="max-w-6xl mx-auto">
+        
+        <!-- Categories Filter -->
+        <div class="mb-8">
+          <div class="flex flex-wrap gap-2">
+            <button 
+              class="category-filter px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white border border-blue-600"
+              data-category="all"
+            >
+              Todos
+            </button>
+            {categories.map(category => (
+              <button 
+                class="category-filter px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                data-category={category}
+              >
+                <Tag className="h-4 w-4 inline mr-1" />
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Entries Grid -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="entriesGrid">
+          {sortedEntries.map(entry => (
+            <article class="entry-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200" data-category={entry.data.category}>
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    {(() => {
+                      const IconComponent = getIconComponent(entry.data.icon);
+                      return <IconComponent className="h-5 w-5 text-blue-600" />;
+                    })()}
+                  </div>
+                  <div>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-1">
+                      {entry.data.title}
+                    </h2>
+                    {entry.data.category && (
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                        {entry.data.category}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                {entry.data.summary}
+              </p>
+              
+              <div class="flex items-center justify-between">
+                <div class="flex items-center text-xs text-gray-500">
+                  <Calendar className="h-4 w-4 mr-1" />
+                  {new Date(entry.data.date).toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </div>
+                <a 
+                  href={`/glosario/${entry.slug}`}
+                  class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Leer más
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-12">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="h-8 w-8 text-gray-400" />
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No se encontraron resultados</h3>
+          <p class="text-gray-600">Intenta con otros términos de búsqueda o categorías.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Search functionality
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+    const entriesGrid = document.getElementById('entriesGrid') as HTMLElement;
+    const emptyState = document.getElementById('emptyState') as HTMLElement;
+    const categoryFilters = document.querySelectorAll('.category-filter') as NodeListOf<HTMLButtonElement>;
+    const entryCards = document.querySelectorAll('.entry-card') as NodeListOf<HTMLElement>;
+
+    let currentCategory = 'all';
+
+    // Search function
+    function filterEntries() {
+      const searchTerm = searchInput.value.toLowerCase();
+      let visibleCount = 0;
+
+      entryCards.forEach(card => {
+        const title = card.querySelector('h2')?.textContent?.toLowerCase() || '';
+        const summary = card.querySelector('p')?.textContent?.toLowerCase() || '';
+        const category = card.getAttribute('data-category') || '';
+        
+        const matchesSearch = title.includes(searchTerm) || summary.includes(searchTerm);
+        const matchesCategory = currentCategory === 'all' || category === currentCategory;
+        
+        if (matchesSearch && matchesCategory) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show/hide empty state
+      if (visibleCount === 0) {
+        entriesGrid.style.display = 'none';
+        emptyState.style.display = 'block';
+      } else {
+        entriesGrid.style.display = 'grid';
+        emptyState.style.display = 'none';
+      }
+    }
+
+    // Category filter function
+    function setActiveCategory(category: string) {
+      currentCategory = category;
+      
+      // Update button styles
+      categoryFilters.forEach(btn => {
+        if (btn.getAttribute('data-category') === category) {
+          btn.className = 'category-filter px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white border border-blue-600';
+        } else {
+          btn.className = 'category-filter px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50';
+        }
+      });
+      
+      filterEntries();
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterEntries);
+    
+    categoryFilters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category') || 'all';
+        setActiveCategory(category);
+      });
+    });
+  </script>
+
+  <style>
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</Layout> 
