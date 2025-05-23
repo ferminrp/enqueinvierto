@@ -1,5 +1,3 @@
-"use client"
-
 import { Handshake, ExternalLink } from "lucide-react"
 import { useState } from "react"
 import { AnimatePresence } from "framer-motion"

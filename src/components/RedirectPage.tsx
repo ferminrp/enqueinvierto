@@ -1,14 +1,11 @@
-"use client"
-
 import { motion } from "framer-motion"
 import { ArrowRight, Shield } from "lucide-react"
-import Image from "next/image"
 import { createPortal } from "react-dom"
 import { useEffect, useState, useRef } from "react"
 
 interface RedirectPageProps {
   onClose: () => void
-  onContinue: () => void // Mantenemos esta prop para compatibilidad
+  onContinue: () => void
 }
 
 export default function RedirectPage({ onClose }: RedirectPageProps) {
@@ -45,8 +42,8 @@ export default function RedirectPage({ onClose }: RedirectPageProps) {
       >
         <div className="flex justify-center -mt-20 mb-4">
           <div className="relative w-32 h-32 bg-white rounded-full border-2 border-gray-200 shadow-md flex items-center justify-center">
-            <Image
-              src="/quaestus.webp"
+            <img
+              src="https://images.compara.ar/quaestus.webp"
               alt="Quaestus Wealth Management"
               width={80}
               height={80}

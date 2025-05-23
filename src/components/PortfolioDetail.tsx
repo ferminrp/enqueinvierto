@@ -1,28 +1,37 @@
-"use client"
-
-import type { Portfolio } from "@/types/portfolio"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useState, useEffect } from "react"
+import type { Portfolio } from "../types/portfolio"
+import { getColorForAssetType } from "../utils/colors"
 
 interface PortfolioDetailProps {
   portfolio: Portfolio
 }
 
 export default function PortfolioDetail({ portfolio }: PortfolioDetailProps) {
-  // Usar el hook para evitar hydration mismatch
-  const isLargeScreen = useMediaQuery("(min-width: 768px)")
-  const sortedComposicionPrincipal = [...portfolio.composicion_principal].sort((a, b) => b.porcentaje - a.porcentaje)
-  const sortedComposicionDetallada = [...portfolio.composicion_detallada].sort((a, b) => b.porcentaje - a.porcentaje)
+  const [isLargeScreen, setIsLargeScreen] = useState(false)
 
-  // Distribuir en columnas para pantallas grandes
-  const distributeInColumns = (items: typeof sortedComposicionDetallada) => {
-    if (!isLargeScreen) return { column1: items, column2: [] }
-    const midpoint = Math.ceil(items.length / 2)
-    return {
-      column1: items.slice(0, midpoint),
-      column2: items.slice(midpoint),
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 768)
     }
-  }
-  const { column1, column2 } = distributeInColumns(sortedComposicionDetallada)
+    
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+    
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
+
+  // Ordenar composiciones por porcentaje descendente
+  const sortedComposicionPrincipal = [...portfolio.composicion_principal].sort(
+    (a, b) => b.porcentaje - a.porcentaje
+  )
+  const sortedComposicionDetallada = [...portfolio.composicion_detallada].sort(
+    (a, b) => b.porcentaje - a.porcentaje
+  )
+
+  // Dividir la composición detallada en dos columnas para pantallas grandes
+  const midpoint = Math.ceil(sortedComposicionDetallada.length / 2)
+  const column1 = sortedComposicionDetallada.slice(0, midpoint)
+  const column2 = sortedComposicionDetallada.slice(midpoint)
 
   return (
     <div className="bg-white rounded-xl border border-[#E5E7EB] overflow-hidden">
@@ -58,6 +67,7 @@ export default function PortfolioDetail({ portfolio }: PortfolioDetailProps) {
             ))}
           </div>
         </section>
+        
         {/* Asignación Detallada */}
         <section>
           <h2 className="text-xl font-bold text-gray-800 mb-4">Asignación Detallada</h2>
@@ -75,6 +85,7 @@ export default function PortfolioDetail({ portfolio }: PortfolioDetailProps) {
               ))}
             </div>
           </div>
+          
           {isLargeScreen ? (
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-2">
@@ -150,45 +161,4 @@ export default function PortfolioDetail({ portfolio }: PortfolioDetailProps) {
       </div>
     </div>
   )
-}
-
-function getColorForAssetType(type: string, opacity = 1): string {
-  if (type.includes("Cash") || type.includes("Caución")) {
-    return `rgba(34, 197, 94, ${opacity})`
-  } else if (type.includes("Alternativos") || type.includes("Metales")) {
-    return `rgba(234, 179, 8, ${opacity})`
-  } else if (
-    type.includes("Renta Fija") ||
-    type.includes("Soberanos") ||
-    type.includes("Corporativos") ||
-    type.includes("Bopreal") ||
-    type.includes("CER") ||
-    type.includes("Tasa Fija")
-  ) {
-    return `rgba(59, 130, 246, ${opacity})`
-  } else if (
-    type.includes("Renta Variable") ||
-    type.includes("Tecnología") ||
-    type.includes("S&P") ||
-    type.includes("Financials") ||
-    type.includes("Energía") ||
-    type.includes("Oil & Gas") ||
-    type.includes("Growth") ||
-    type.includes("Value") ||
-    type.includes("EWZ")
-  ) {
-    return `rgba(239, 68, 68, ${opacity})`
-  }
-  if (type.includes("USD")) {
-    return `rgba(16, 185, 129, ${opacity})`
-  } else if (type.includes("ARS")) {
-    return `rgba(74, 222, 128, ${opacity})`
-  } else if (type.includes("EEUU")) {
-    return `rgba(220, 38, 38, ${opacity})`
-  } else if (type.includes("Brasil")) {
-    return `rgba(248, 113, 113, ${opacity})`
-  } else if (type.includes("Arg")) {
-    return `rgba(254, 202, 202, ${opacity})`
-  }
-  return `rgba(107, 114, 128, ${opacity})`
 } 

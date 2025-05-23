@@ -1,147 +1,195 @@
 # Enqueinvierto Clone - Quaestus Wealth Management
 
-Este proyecto es un clon de la web [enqueinvierto.ar](https://enqueinvierto.ar/) desarrollado con Next.js y desplegado en Cloudflare Pages/Workers. El objetivo es replicar la experiencia de usuario y las funcionalidades principales, adaptando la arquitectura a las limitaciones y mejores prácticas de Cloudflare ([ver guía](https://developers.cloudflare.com/workers/frameworks/framework-guides/nextjs/)).
+Este proyecto es un clon de la web [enqueinvierto.ar](https://enqueinvierto.ar/) desarrollado con **Astro** y desplegado en Cloudflare Pages/Workers. El objetivo es replicar la experiencia de usuario y las funcionalidades principales, optimizado para rendimiento y SEO.
 
-## Objetivo del Proyecto
+## 🚀 Tecnologías Utilizadas
 
-- Clonar la landing principal y las páginas de detalle de carteras de inversión recomendadas por Quaestus Advisory S.A.
-- Permitir la navegación entre las carteras y mostrar la composición principal y detallada de cada una.
-- Incluir llamados a la acción y footer institucional.
-- Documentar todo el proceso y las decisiones técnicas.
+- **Astro 5.x**: Framework principal con renderizado estático
+- **React 18**: Para componentes interactivos
+- **TypeScript**: Tipado estático
+- **Tailwind CSS**: Framework de estilos
+- **Framer Motion**: Animaciones
+- **Lucide React**: Iconos
+- **Cloudflare Adapter**: Despliegue optimizado
 
-## Tareas Principales
+## 🎯 Ventajas de Astro
 
-- [x] **Documentar la estructura y el objetivo del proyecto en este README**
-- [x] **Crear archivo de datos**: `src/data/portfolios.ts` con el JSON de carteras
-- [x] **Página Home** (`/`):
-  - [x] Mostrar cards/lista de las 9 carteras
-  - [x] Cards clickeables que llevan al detalle
-  - [x] Sección de asesoramiento y llamados a la acción
-  - [x] Footer institucional
-- [x] **Página de Detalle de Cartera** (`/cartera/[id]`):
-  - [x] Mostrar nombre, fecha, composición principal y detallada
-  - [x] Llamado a la acción y footer legal
-  - [x] Breadcrumb y botón para volver
-- [x] **Componentes reutilizables**:
-  - [x] `PortfolioCard` (card de cartera)
-  - [x] `PortfolioGrid` (lista de carteras)
-  - [x] `PortfolioDetail` (detalle de cartera)
-  - [x] `CTAFooter` (llamado a la acción)
-  - [x] `HomeCTAFooter` (footer CTA home)
-  - [x] `ActionButtons` (botón asesoramiento home)
-  - [x] `RedirectPage` (modal seguro de redirección)
-  - [x] `LegalFooter` (footer legal)
-- [x] **Compatibilidad Cloudflare**:
-  - [x] Usar rutas estáticas y generación en build
-  - [x] Evitar SSR innecesario
-  - [x] Imports relativos y paths compatibles
-  - [x] Configuración de imágenes externas (`ik.imagekit.io`) en `next.config.ts`
-- [x] **Instalación de dependencias necesarias**:
-  - [x] `lucide-react` para íconos
-  - [x] `framer-motion` para animaciones
-- [x] **Solución de errores de tipado y build en Next.js 15+**
-- [ ] **Documentar cualquier limitación, workaround o decisión relevante**
+- **Rendimiento**: Menor JavaScript en el cliente
+- **SEO**: Mejor renderizado estático
+- **Cloudflare**: Optimización nativa para Workers
+- **Flexibilidad**: React solo donde se necesita interactividad
 
----
+## 📁 Estructura del Proyecto
 
-## Troubleshooting y Decisiones Técnicas
-
-### Deploy en Cloudflare Pages/Workers
-- **Build command:** `npm run build`
-- **Deploy command:** `npx wrangler deploy` (solo si usas Workers directamente; en Pages puede omitirse)
-- **Root directory:** `/`
-- **Variables de entorno:** agregar si se usan APIs externas o claves.
-
-### Imágenes externas
-- Se debe agregar el dominio `ik.imagekit.io` en `next.config.ts` para que Next.js permita servir imágenes externas con `next/image`:
-
-```js
-images: {
-  remotePatterns: [
-    {
-      protocol: 'https',
-      hostname: 'ik.imagekit.io',
-      port: '',
-      pathname: '/**',
-    },
-  ],
-},
+```
+src/
+├── components/          # Componentes React y Astro
+│   ├── ActionButtons.tsx
+│   ├── CTAFooter.tsx
+│   ├── HomeCTAFooter.tsx
+│   ├── LegalFooter.astro
+│   ├── PortfolioCard.tsx
+│   ├── PortfolioDetail.tsx
+│   ├── PortfolioGrid.tsx
+│   └── RedirectPage.tsx
+├── data/
+│   └── portfolios.ts    # Datos de carteras
+├── layouts/
+│   └── Layout.astro     # Layout base
+├── pages/
+│   ├── index.astro      # Página principal
+│   └── cartera/
+│       └── [id].astro   # Páginas dinámicas
+├── types/
+│   └── portfolio.ts     # Tipos TypeScript
+└── utils/
+    └── colors.ts        # Utilidades de colores
 ```
 
-### Problema de tipos con PageProps en Next.js 15+
-- **Error:**
-  ```
-  Type error: Type 'PageProps' does not satisfy the constraint ...
-  Type '{ id: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
-  ```
-- **Solución:**
-  - En Next.js 15, los parámetros de ruta (`params`) y parámetros de búsqueda (`searchParams`) ahora son Promesas y deben ser esperados (await).
-  - La solución correcta es tipar los params como `Promise<{ id: string }>` y hacer await:
-    ```ts
-    type Params = Promise<{ id: string }>;
-
-    export default async function CarteraPage(props: { params: Params }) {
-      const { id } = await props.params;
-      // resto del código
-    }
-    ```
-  - Si estás migrando desde versiones anteriores, ejecuta el codemod oficial: `npx @next/codemod@latest next-async-request-api .`
-
-### Despliegue en Cloudflare Workers
-- Se configuró el proyecto con `@opennextjs/cloudflare` (v1.0.2) para facilitar el despliegue en Cloudflare Workers.
-- **Scripts de despliegue** (package.json):
-  ```json
-  "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-  "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
-  ```
-- **URL de despliegue**: https://enqueinvierto.ferminrp.workers.dev
-- **Configuración**: El archivo `wrangler.jsonc` contiene la configuración para el despliegue en Cloudflare Workers.
-- **Variables de entorno**: Se usan a través del archivo `.dev.vars` para el entorno de desarrollo.
-
-### Particularidades de Cloudflare Workers y Next.js
-- Debido a la diferente arquitectura serverless de Cloudflare Workers vs. Vercel, algunas APIs de Next.js pueden comportarse de manera diferente.
-- Se recomienda usar `@opennextjs/cloudflare` para compatibilidad máxima con los Workers de Cloudflare.
-- Las regeneraciones incrementales estáticas (ISR) se manejan de forma diferente - consultar la [documentación de OpenNext para Cloudflare](https://opennext.js.org/cloudflare).
-
-### Modal de redirección y assets locales
-- Para máxima performance y compatibilidad, las imágenes de marca (ej: logo Quaestus) deben estar en la carpeta `public` y usarse como `/quaestus.webp` en los componentes.
-
-### Otros
-- Si usas features avanzadas de Next.js (middleware, edge, etc.), revisa la [documentación de Cloudflare](https://developers.cloudflare.com/workers/frameworks/framework-guides/nextjs/) para compatibilidad.
-
----
-
-## Getting Started
-
-First, run the development server:
+## 🚀 Desarrollo
 
 ```bash
+# Instalar dependencias
+npm install
+
+# Desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build
+npm run build
+
+# Preview
+npm run preview
+
+# Deploy a Cloudflare
+npm run deploy
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📊 Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### ✅ Completado
+- [x] **Página Home**: Grid de 9 carteras de inversión
+- [x] **Páginas de Detalle**: Composición principal y detallada
+- [x] **Componentes Interactivos**: Modales, animaciones, CTAs
+- [x] **SEO Optimizado**: Meta tags completos
+- [x] **Responsive Design**: Adaptado a todos los dispositivos
+- [x] **Analytics**: Google Analytics, Clarity, Ahrefs
+- [x] **Logo Actualizado**: Quaestus con nueva URL del CDN
+- [x] **Sistema de Colores**: Paleta coherente por clase de activo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🎨 Componentes
 
-## Learn More
+- **PortfolioCard**: Tarjeta de cartera con visualización de composición
+- **PortfolioGrid**: Grid responsivo de carteras
+- **PortfolioDetail**: Vista detallada con gráficos interactivos
+- **ActionButtons**: Botones de llamada a la acción
+- **HomeCTAFooter**: Footer con múltiples CTAs
+- **CTAFooter**: CTA específico para páginas de detalle
+- **RedirectPage**: Modal seguro de redirección
+- **LegalFooter**: Footer institucional
 
-To learn more about Next.js, take a look at the following resources:
+## 🌐 Despliegue en Cloudflare
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Configuración
+- **Adaptador**: `@astrojs/cloudflare`
+- **Modo**: Estático (`output: 'static'`)
+- **Imágenes**: Dominios permitidos configurados
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Comandos
+```bash
+# Build y deploy
+npm run build
+npm run deploy
 
-## Deploy on Vercel
+# Solo build
+npm run build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Preview local del build
+npm run preview
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Configuración
+
+### Variables de Entorno
+- Configuradas en `.dev.vars` para desarrollo
+- Usar Wrangler para producción
+
+### Imágenes
+- **CDN Principal**: `compara-ii.b-cdn.net`
+- **CDN Secundario**: `ik.imagekit.io`
+- **CDN Quaestus**: `images.compara.ar`
+- Configurados en `astro.config.mjs`
+
+### Logo Quaestus
+- **URL Modal**: `https://images.compara.ar/quaestus.webp`
+- **URL Footer**: `https://compara-ii.b-cdn.net/enqueinvierto/LogoQuaestus_H_Transp.png`
+- **Usado en**: Footer legal, modal de redirección
+
+### Favicon
+- **URL**: `https://emojifavicon.com/💼` (Emoji de maletín)
+- **Tipo**: Favicon dinámico con emoji
+
+## 📈 Optimizaciones
+
+- **Hidratación Selectiva**: `client:load` solo donde es necesario
+- **Imágenes Optimizadas**: Configuración de dominios CDN
+- **Bundle Splitting**: Automático con Astro
+- **CSS Optimizado**: Tailwind con purge automático
+
+## 📋 Estructura de Datos
+
+```typescript
+interface Portfolio {
+  nombre: string
+  fecha: string
+  composicion_principal: { tipo: string; porcentaje: number }[]
+  composicion_detallada: { tipo: string; porcentaje: number }[]
+}
+```
+
+## 🎨 Sistema de Colores por Clase de Activo
+
+El sistema de colores está centralizado en `src/utils/colors.ts` y organizado por 4 categorías principales para máxima coherencia visual:
+
+### 🟢 Cash & Money Market (Verde)
+- **Color Base**: `rgba(34, 197, 94, 1)` - Verde
+- **Incluye**: Cash - MM, USD - Caución, ARS - Caución
+- **Variantes por moneda**:
+  - USD: `rgba(16, 185, 129, 1)` (Verde azulado)
+  - ARS: `rgba(74, 222, 128, 1)` (Verde claro)
+
+### 🔵 Renta Fija (Azul)
+- **Color Base**: `rgba(59, 130, 246, 1)` - Azul
+- **Incluye**: Renta Fija, USD - Corporativos, USD - Bopreal, USD - Soberanos hard, ARS - CER, ARS - Tasa Fija
+- **Aplicación**: Todos los instrumentos de renta fija independientemente de la moneda
+
+### 🔴 Renta Variable (Rojo)
+- **Color Base**: `rgba(239, 68, 68, 1)` - Rojo
+- **Incluye**: Renta Variable, EEUU - Tecnología, EEUU - S&P, EEUU - Financials, EEUU - Energía, EEUU - Growth, EEUU - Value, Brasil - EWZ, Arg - Energía, Arg - Financials, Arg - Oil & Gas
+- **Variantes por región**:
+  - EEUU: `rgba(220, 38, 38, 1)` (Rojo oscuro)
+  - Brasil: `rgba(248, 113, 113, 1)` (Rojo claro)
+  - Argentina: `rgba(254, 202, 202, 1)` (Rojo muy claro)
+
+### 🟡 Alternativos (Amarillo)
+- **Color Base**: `rgba(234, 179, 8, 1)` - Amarillo
+- **Incluye**: Alternativos, Metales
+- **Aplicación**: Todos los instrumentos alternativos
+
+### 🎯 Principios del Nuevo Sistema
+1. **4 Categorías Principales**: Verde (Cash), Azul (Renta Fija), Rojo (Renta Variable), Amarillo (Alternativos)
+2. **Lógica por Contenido**: Los colores se asignan según palabras clave en el nombre del activo
+3. **Variantes Regionales**: Subcategorías por moneda/región dentro de cada color principal
+4. **Consistencia Visual**: Mismo color base entre composición principal y detallada
+5. **Escalabilidad**: Fácil agregar nuevos activos manteniendo la lógica de categorías
+
+## 📞 Contacto y Soporte
+
+Para consultas sobre implementación o asesoramiento financiero, contactar a Quaestus Wealth Management a través de los formularios integrados en la aplicación.
+
+## 🔗 Enlaces
+
+- **Sitio Original**: [enqueinvierto.ar](https://enqueinvierto.ar/)
+- **Quaestus Advisory**: [qadvisory.com.ar](https://qadvisory.com.ar/)
+- **Documentación Astro**: [astro.build](https://astro.build/)
+- **Cloudflare Workers**: [developers.cloudflare.com](https://developers.cloudflare.com/workers/)

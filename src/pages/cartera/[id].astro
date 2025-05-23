@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PortfolioDetail from '../../components/PortfolioDetail';
+import CTAFooter from '../../components/CTAFooter';
+import LegalFooter from '../../components/LegalFooter.astro';
+import { portfolios } from '../../data/portfolios';
+import { ChevronLeft, Home } from 'lucide-react';
+
+export async function getStaticPaths() {
+  return portfolios.map((portfolio, index) => ({
+    params: { id: index.toString() },
+    props: { portfolio, index }
+  }));
+}
+
+const { portfolio } = Astro.props;
+
+if (!portfolio) {
+  return Astro.redirect('/404');
+}
+
+const title = `${portfolio.nombre} | Quaestus Wealth Management`;
+const description = `Detalle de la ${portfolio.nombre} recomendada por Quaestus Wealth Management. Fecha: ${portfolio.fecha}`;
+---
+
+<Layout title={title} description={description}>
+  <main class="min-h-screen relative overflow-hidden">
+    <div 
+      class="fixed inset-0 w-full h-full pointer-events-none" 
+      style="background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 50%, #eef2f7 100%); z-index: -1;"
+    ></div>
+    
+    <div class="container mx-auto px-4 py-16 md:py-24 relative">
+      <div class="max-w-4xl mx-auto">
+        <nav class="flex items-center mb-8 text-sm overflow-hidden">
+          <a href="/" class="text-gray-500 hover:text-gray-700 inline-flex items-center gap-1 flex-shrink-0">
+            <Home className="h-4 w-4" />
+            <span class="hidden sm:inline">Inicio</span>
+          </a>
+          <span class="mx-2 text-gray-400 flex-shrink-0">/</span>
+          <span class="text-gray-800 font-medium truncate">Detalle de Cartera</span>
+        </nav>
+        
+        <div class="mb-10">
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{portfolio.nombre}</h1>
+          <p class="text-gray-600">Fecha: <span class="font-medium">{portfolio.fecha}</span></p>
+        </div>
+        
+        <PortfolioDetail portfolio={portfolio} client:load />
+        
+        <div class="mt-12">
+          <CTAFooter client:load />
+        </div>
+        
+        <div class="mt-10">
+          <a href="/" class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium">
+            <ChevronLeft className="h-5 w-5" />
+            Volver a todas las carteras
+          </a>
+        </div>
+        
+        <LegalFooter />
+      </div>
+    </div>
+  </main>
+</Layout> 
