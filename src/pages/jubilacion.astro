@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RetirementCalculator from '../components/RetirementCalculator';
+import LegalFooter from '../components/LegalFooter.astro';
+
+const title = "Calculadora de Jubilación | Quaestus Advisory S.A.";
+const description = "Planifica tu futuro financiero con nuestra calculadora de jubilación. Descubre cuánto necesitas ahorrar para jubilarte cómodamente y visualiza tu proyección de ingresos.";
+---
+
+<Layout title={title} description={description}>
+  <main class="min-h-screen relative overflow-hidden">
+    <!-- Gradiente de fondo consistente con el diseño -->
+    <div
+      class="fixed inset-0 w-full h-full pointer-events-none"
+      style="background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 50%, #eef2f7 100%); z-index: -1;"
+    ></div>
+
+    <div class="container mx-auto px-4 py-16 md:py-24 relative">
+      <!-- Hero Section -->
+      <div class="max-w-4xl mx-auto mb-10 md:mb-16 text-center">
+        <div class="relative mb-6">
+          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight relative inline-block z-10">
+            Calculadora de Jubilación
+            <span class="absolute -bottom-2 md:-bottom-3 left-0 h-3 md:h-4 bg-blue-200 -z-10 opacity-70 w-full"></span>
+          </h1>
+        </div>
+
+        <p class="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed md:leading-relaxed relative z-10">
+          Planifica tu futuro financiero con precisión. Nuestra calculadora te ayuda a determinar cuánto necesitas ahorrar para jubilarte cómodamente, considerando diferentes perfiles de riesgo y escenarios de inversión.
+        </p>
+      </div>
+
+      <!-- Calculadora Principal -->
+      <div class="relative z-10">
+        <RetirementCalculator client:load />
+      </div>
+
+      <!-- Información Adicional -->
+      <div class="max-w-4xl mx-auto mt-16 md:mt-24 relative z-10">
+        <div class="bg-white/80 backdrop-blur-sm rounded-xl border border-white/20 p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+            ¿Por qué es importante planificar tu jubilación?
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-gray-800">Beneficios de Planificar Temprano</h3>
+              <ul class="space-y-2 text-gray-600">
+                <li class="flex items-start gap-2">
+                  <span class="text-green-500 mt-1">•</span>
+                  <span>El poder del interés compuesto trabaja a tu favor.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-green-500 mt-1">•</span>
+                  <span>Menor presión financiera en contribuciones mensuales.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-green-500 mt-1">•</span>
+                  <span>Mayor flexibilidad para ajustar tu estrategia.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-green-500 mt-1">•</span>
+                  <span>Tranquilidad y seguridad para tu futuro.</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-gray-800">Factores Clave a Considerar</h3>
+              <ul class="space-y-2 text-gray-600">
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 mt-1">•</span>
+                  <span>Inflación y su impacto en el poder adquisitivo.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 mt-1">•</span>
+                  <span>Expectativa de vida y años en jubilación.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 mt-1">•</span>
+                  <span>Gastos médicos y de cuidado personal.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 mt-1">•</span>
+                  <span>Diversificación de inversiones según la edad.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call to Action -->
+      <div class="max-w-4xl mx-auto mt-12 relative z-10">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-center text-white">
+          <h3 class="text-2xl font-bold mb-4">
+            ¿Necesitas asesoramiento personalizado?
+          </h3>
+          <p class="text-blue-100 mb-6 max-w-2xl mx-auto">
+            Nuestros asesores financieros pueden ayudarte a implementar una estrategia de jubilación personalizada basada en tus objetivos específicos y situación financiera.
+          </p>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSc5yekqpbmP4MsNkLcS80oFh0KujT3Z2Y2-9v2UNEl6shjS2A/viewform?usp=pp_url&entry.946569307=Web+-+EnqueInvierto"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+          >
+            Pedir Asesoramiento
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer Legal -->
+      <div class="max-w-4xl mx-auto relative z-10 mt-16">
+        <LegalFooter />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    background-attachment: fixed;
+  }
+</style>

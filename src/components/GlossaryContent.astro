@@ -36,9 +36,12 @@
   }
   
   /* Clean list styling */
-  .notion-content :global(ul),
+  .notion-content :global(ul) {
+    @apply my-4 pl-6 list-disc;
+  }
+  
   .notion-content :global(ol) {
-    @apply my-4 pl-6;
+    @apply my-4 pl-6 list-decimal;
   }
   
   .notion-content :global(li) {

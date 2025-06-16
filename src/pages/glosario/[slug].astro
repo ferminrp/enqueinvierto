@@ -200,7 +200,7 @@ const getIconComponent = (iconName: string) => {
       const articleBottom = articleTop + articleHeight - windowHeight;
       const progress = Math.min(Math.max((scrollTop - articleTop) / (articleBottom - articleTop), 0), 1);
       
-      progressBar.style.width = `${progress * 100}%`;
+      (progressBar as HTMLElement).style.width = `${progress * 100}%`;
     }
 
     // Initialize when DOM is loaded

@@ -83,50 +83,49 @@ const getIconComponent = (iconName: string) => {
         <!-- Entries Grid -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="entriesGrid">
           {sortedEntries.map(entry => (
-            <article class="entry-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200" data-category={entry.data.category}>
-              <div class="flex items-start justify-between mb-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    {(() => {
-                      const IconComponent = getIconComponent(entry.data.icon);
-                      return <IconComponent className="h-5 w-5 text-blue-600" />;
-                    })()}
-                  </div>
-                  <div>
-                    <h2 class="text-lg font-semibold text-gray-900 mb-1">
-                      {entry.data.title}
-                    </h2>
-                    {entry.data.category && (
-                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                        {entry.data.category}
-                      </span>
-                    )}
+            <a href={`/glosario/${entry.slug}`} class="entry-card-link group">
+              <article class="entry-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200 cursor-pointer" data-category={entry.data.category}>
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      {(() => {
+                        const IconComponent = getIconComponent(entry.data.icon);
+                        return <IconComponent className="h-5 w-5 text-blue-600" />;
+                      })()}
+                    </div>
+                    <div>
+                      <h2 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                        {entry.data.title}
+                      </h2>
+                      {entry.data.category && (
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                          {entry.data.category}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                {entry.data.summary}
-              </p>
-              
-              <div class="flex items-center justify-between">
-                <div class="flex items-center text-xs text-gray-500">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  {new Date(entry.data.date).toLocaleDateString('es-ES', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
+                
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  {entry.data.summary}
+                </p>
+                
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center text-xs text-gray-500">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    {new Date(entry.data.date).toLocaleDateString('es-ES', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </div>
+                  <span class="inline-flex items-center text-blue-600 group-hover:text-blue-800 text-sm font-medium transition-colors">
+                    Leer más
+                    <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </div>
-                <a 
-                  href={`/glosario/${entry.slug}`}
-                  class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  Leer más
-                  <ArrowRight className="h-4 w-4 ml-1" />
-                </a>
-              </div>
-            </article>
+              </article>
+            </a>
           ))}
         </div>
 
@@ -148,7 +147,7 @@ const getIconComponent = (iconName: string) => {
     const entriesGrid = document.getElementById('entriesGrid') as HTMLElement;
     const emptyState = document.getElementById('emptyState') as HTMLElement;
     const categoryFilters = document.querySelectorAll('.category-filter') as NodeListOf<HTMLButtonElement>;
-    const entryCards = document.querySelectorAll('.entry-card') as NodeListOf<HTMLElement>;
+    const entryCardLinks = document.querySelectorAll('.entry-card-link') as NodeListOf<HTMLElement>;
 
     let currentCategory = 'all';
 
@@ -157,7 +156,8 @@ const getIconComponent = (iconName: string) => {
       const searchTerm = searchInput.value.toLowerCase();
       let visibleCount = 0;
 
-      entryCards.forEach(card => {
+      entryCardLinks.forEach(cardLink => {
+        const card = cardLink.querySelector('.entry-card') as HTMLElement;
         const title = card.querySelector('h2')?.textContent?.toLowerCase() || '';
         const summary = card.querySelector('p')?.textContent?.toLowerCase() || '';
         const category = card.getAttribute('data-category') || '';
@@ -166,10 +166,10 @@ const getIconComponent = (iconName: string) => {
         const matchesCategory = currentCategory === 'all' || category === currentCategory;
         
         if (matchesSearch && matchesCategory) {
-          card.style.display = 'block';
+          cardLink.style.display = 'block';
           visibleCount++;
         } else {
-          card.style.display = 'none';
+          cardLink.style.display = 'none';
         }
       });
 

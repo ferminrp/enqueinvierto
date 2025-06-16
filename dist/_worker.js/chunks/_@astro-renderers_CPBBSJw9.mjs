@@ -1,5 +1,5 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { n as getDefaultExportFromCjs } from './astro/server_BYckSFmU.mjs';
+import { l as getDefaultExportFromCjs } from './astro/server_T4Zx1oY7.mjs';
 
 var react = {exports: {}};
 
@@ -487,4 +487,4 @@ var server_default = renderer;
 
 const renderers = [Object.assign({"name":"@astrojs/react","clientEntrypoint":"@astrojs/react/client.js","serverEntrypoint":"@astrojs/react/server.js"}, { ssr: server_default }),];
 
-export { renderers as a, requireReact as b, reactExports as r };
+export { React as R, renderers as a, requireReact as b, reactExports as r };
