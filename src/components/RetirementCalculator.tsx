@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { TrendingUp, Target, DollarSign } from 'lucide-react'
 import type { RetirementInputs, RetirementResults as RetirementResultsType, CalculationMode } from '../types/retirement'
 import { calculateRetirementByAge, calculateRetirementByAmount, RISK_PROFILE_RETURNS } from '../utils/retirementCalculations'
@@ -12,33 +12,33 @@ export default function RetirementCalculator() {
   const [inputValues, setInputValues] = useState({
     currentAge: '30',
     retirementAge: '65',
-    currentSavings: '30000',
-    monthlyContributions: '1000',
+    currentSavings: '10000',
+    monthlyContributions: '300',
     monthlyIncome: '5000',
     targetAmount: '1000000',
     customReturn: '',
     inflationRate: '3',
     lifeExpectancy: '85',
-    retirementMonthlyExpenses: '3000'
+    retirementMonthlyExpenses: '4000'
   })
   
   const [inputs, setInputs] = useState<RetirementInputs>({
     currentAge: 30,
     retirementAge: 65,
-    currentSavings: 30000,
-    monthlyContributions: 1000,
+    currentSavings: 10000,
+    monthlyContributions: 300,
     monthlyIncome: 5000,
     targetAmount: 1000000,
     riskProfile: 'moderate',
     inflationRate: 3,
     lifeExpectancy: 85,
-    retirementMonthlyExpenses: 3000
+    retirementMonthlyExpenses: 4000
   })
   
   const [results, setResults] = useState<RetirementResultsType | null>(null)
   const [errors, setErrors] = useState<string[]>([])
 
-  const validateInputs = (): string[] => {
+  const validateInputs = useCallback((): string[] => {
     const newErrors: string[] = []
     
     if (inputs.currentAge < 18 || inputs.currentAge > 80) {
@@ -66,9 +66,9 @@ export default function RetirementCalculator() {
     }
     
     return newErrors
-  }
+  }, [inputs, mode])
 
-  const calculateResults = () => {
+  const calculateResults = useCallback(() => {
     const validationErrors = validateInputs()
     setErrors(validationErrors)
     
@@ -91,11 +91,11 @@ export default function RetirementCalculator() {
       setErrors([error instanceof Error ? error.message : 'Error en el cálculo'])
       setResults(null)
     }
-  }
+  }, [inputs, mode])
 
   useEffect(() => {
     calculateResults()
-  }, [inputs, mode])
+  }, [inputs, mode, calculateResults])
 
   const handleInputChange = (field: keyof RetirementInputs, value: number | string) => {
     setInputs(prev => ({
@@ -371,7 +371,10 @@ export default function RetirementCalculator() {
       {/* Chart */}
       {results && (
         <div className="mt-8">
-          <RetirementChart data={results.projectionData} />
+          <RetirementChart 
+            key={`${inputs.lifeExpectancy}-${inputs.retirementAge}-${inputs.currentAge}`}
+            data={results.projectionData} 
+          />
         </div>
       )}
     </div>

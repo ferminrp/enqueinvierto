@@ -205,18 +205,18 @@ export default function RetirementResults({ results, mode }: RetirementResultsPr
           <div className="space-y-3">
             <h5 className="font-medium text-gray-700">Aumentar Ahorros:</h5>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Incrementa tus aportes mensuales cuando sea posible.</li>
-              <li>• Aprovecha aumentos salariales para aumentar contribuciones.</li>
-              <li>• Considera aportes extraordinarios anuales.</li>
+              <li>• Incrementá tus aportes mensuales cuando sea posible.</li>
+              <li>• Aprovechá aumentos salariales para aumentar contribuciones.</li>
+              <li>• Considerá aportes extraordinarios anuales.</li>
             </ul>
           </div>
           
           <div className="space-y-3">
             <h5 className="font-medium text-gray-700">Optimizar Inversiones:</h5>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Revisa periódicamente tu perfil de riesgo.</li>
-              <li>• Diversifica tus inversiones según tu edad.</li>
-              <li>• Mantén un portafolio equilibrado y consistente.</li>
+              <li>• Revisá periódicamente tu perfil de riesgo.</li>
+              <li>• Diversificá tus inversiones según tu edad.</li>
+              <li>• Mantené un portafolio equilibrado y consistente.</li>
             </ul>
           </div>
         </div>

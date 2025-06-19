@@ -168,6 +168,7 @@ function generateProjectionData(inputs: RetirementInputs, finalAmount: number): 
   let currentAge = inputs.currentAge
   const retirementAge = inputs.retirementAge || inputs.currentAge + 30
   
+  
   // Accumulation phase
   for (let year = 0; currentAge < retirementAge; year++) {
     const annualContributions = inputs.monthlyContributions * 12
@@ -193,8 +194,9 @@ function generateProjectionData(inputs: RetirementInputs, finalAmount: number): 
   // Retirement phase
   currentSavings = finalAmount
   const annualExpenses = inputs.retirementMonthlyExpenses * 12
+  const yearsInRetirement = inputs.lifeExpectancy - retirementAge
   
-  for (let year = 0; year < 30 && currentSavings > 0; year++) {
+  for (let year = 0; year < yearsInRetirement && currentSavings > 0; year++) {
     const interestEarned = currentSavings * annualReturn
     const inflationAdjustedExpenses = annualExpenses * Math.pow(1 + inflationRate, year)
     

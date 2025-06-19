@@ -18,9 +18,6 @@ export default function RetirementChart({ data }: RetirementChartProps) {
     if (name === 'totalSavings') {
       return [formatCurrency(value), 'Total Ahorros']
     }
-    if (name === 'inflationAdjustedValue') {
-      return [formatCurrency(value), 'Valor Ajustado por Inflación']
-    }
     return [formatCurrency(value), name]
   }
 
@@ -40,11 +37,10 @@ export default function RetirementChart({ data }: RetirementChartProps) {
       'Edad',
       'Año',
       'Fase',
-      'Total Ahorros (USD)',
       'Contribuciones (USD)',
       'Gastos (USD)',
       'Intereses (USD)',
-      'Valor Real (USD)'
+      'Total Ahorros (USD)'
     ]
 
     // Convert data to CSV rows
@@ -54,11 +50,10 @@ export default function RetirementChart({ data }: RetirementChartProps) {
         row.age,
         row.year,
         row.phase === 'accumulation' ? 'Acumulación' : 'Jubilación',
-        row.totalSavings.toFixed(2),
         row.annualContributions > 0 ? row.annualContributions.toFixed(2) : '0',
         row.annualExpenses ? row.annualExpenses.toFixed(2) : '0',
         row.interestEarned.toFixed(2),
-        row.inflationAdjustedValue.toFixed(2)
+        row.totalSavings.toFixed(2)
       ].join(','))
     ]
 
@@ -87,13 +82,17 @@ export default function RetirementChart({ data }: RetirementChartProps) {
           Proyección de Ahorros a lo Largo del Tiempo
         </h3>
         <p className="text-gray-600">
-          Visualiza cómo crecerán tus ahorros durante la fase de acumulación y cómo se consumirán durante la jubilación
+          Visualizá cómo crecerán tus ahorros durante la fase de acumulación y cómo se consumirán durante la jubilación
         </p>
       </div>
 
       <div className="h-96 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={allData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <LineChart 
+            key={`${allData.length}-${data.length}`} // Force re-render when data changes
+            data={allData} 
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="age" 
@@ -126,16 +125,6 @@ export default function RetirementChart({ data }: RetirementChartProps) {
               name="Total Ahorros"
             />
             
-            {/* Inflation adjusted line */}
-            <Line
-              type="monotone"
-              dataKey="inflationAdjustedValue"
-              stroke="#f59e0b"
-              strokeWidth={2}
-              dot={false}
-              name="Valor Ajustado por Inflación"
-              strokeDasharray="5 5"
-            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -145,17 +134,6 @@ export default function RetirementChart({ data }: RetirementChartProps) {
         <div className="flex items-center gap-2">
           <div className="w-6 h-1 bg-blue-500 rounded"></div>
           <span className="text-sm text-gray-600">Total Ahorros</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1">
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-          </div>
-          <span className="text-sm text-gray-600">Valor Ajustado por Inflación</span>
         </div>
       </div>
 
@@ -213,11 +191,10 @@ export default function RetirementChart({ data }: RetirementChartProps) {
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Edad</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Año</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Fase</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">Total Ahorros</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-700">Contribuciones</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-700">Gastos</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-700">Intereses</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">Valor Real</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-700">Total Ahorros</th>
               </tr>
             </thead>
             <tbody>
@@ -234,9 +211,6 @@ export default function RetirementChart({ data }: RetirementChartProps) {
                       {row.phase === 'accumulation' ? 'Acumulación' : 'Jubilación'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right font-medium text-gray-900">
-                    {formatCurrency(row.totalSavings)}
-                  </td>
                   <td className="py-3 px-4 text-right text-gray-600">
                     {row.annualContributions > 0 ? formatCurrency(row.annualContributions) : '-'}
                   </td>
@@ -246,8 +220,8 @@ export default function RetirementChart({ data }: RetirementChartProps) {
                   <td className="py-3 px-4 text-right text-green-600">
                     {formatCurrency(row.interestEarned)}
                   </td>
-                  <td className="py-3 px-4 text-right text-gray-600">
-                    {formatCurrency(row.inflationAdjustedValue)}
+                  <td className="py-3 px-4 text-right font-medium text-gray-900">
+                    {formatCurrency(row.totalSavings)}
                   </td>
                 </tr>
               ))}
@@ -257,11 +231,10 @@ export default function RetirementChart({ data }: RetirementChartProps) {
         
         {/* Table Legend */}
         <div className="mt-4 text-xs text-gray-500 space-y-1">
-          <p><strong>Total Ahorros:</strong> Monto total acumulado sin ajustar por inflación</p>
           <p><strong>Contribuciones:</strong> Aportes realizados durante el año (solo en fase de acumulación)</p>
-          <p><strong>Gastos:</strong> Gastos de jubilación descontados anualmente (solo en fase de jubilación, ajustados por inflación)</p>
+          <p><strong>Gastos:</strong> Gastos de jubilación descontados anualmente (solo en fase de jubilación)</p>
           <p><strong>Intereses:</strong> Rendimiento generado por las inversiones</p>
-          <p><strong>Valor Real:</strong> Poder adquisitivo real de los ahorros ajustado por inflación</p>
+          <p><strong>Total Ahorros:</strong> Monto total acumulado a valor final (sin ajustar por inflación)</p>
         </div>
       </div>
     </div>
