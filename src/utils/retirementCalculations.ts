@@ -59,7 +59,10 @@ export function calculateRetirementByAge(inputs: RetirementInputs): RetirementRe
     projectedMonthlyRetirementIncome: calculateMonthlyRetirementIncome(totalSavingsAtRetirement, yearsInRetirement, getReturnRate(inputs)),
     fundsLastYears,
     inflationAdjustedTarget,
-    projectionData
+    projectionData,
+    lifeExpectancy: inputs.lifeExpectancy,
+    yearsInRetirement,
+    monthlyExpenses: inputs.retirementMonthlyExpenses
   }
 }
 
@@ -116,7 +119,10 @@ export function calculateRetirementByAmount(inputs: RetirementInputs): Retiremen
     projectedMonthlyRetirementIncome: calculateMonthlyRetirementIncome(targetAmount, yearsInRetirement, getReturnRate(inputs)),
     fundsLastYears,
     inflationAdjustedTarget: targetAmount,
-    projectionData
+    projectionData,
+    lifeExpectancy: inputs.lifeExpectancy,
+    yearsInRetirement,
+    monthlyExpenses: inputs.retirementMonthlyExpenses
   }
 }
 
@@ -196,13 +202,14 @@ function generateProjectionData(inputs: RetirementInputs, finalAmount: number): 
   const annualExpenses = inputs.retirementMonthlyExpenses * 12
   const yearsInRetirement = inputs.lifeExpectancy - retirementAge
   
-  for (let year = 0; year < yearsInRetirement && currentSavings > 0; year++) {
-    const interestEarned = currentSavings * annualReturn
+  for (let year = 0; year < yearsInRetirement; year++) {
+    // Only apply interest if savings are positive
+    const interestEarned = currentSavings > 0 ? currentSavings * annualReturn : 0
     const inflationAdjustedExpenses = annualExpenses * Math.pow(1 + inflationRate, year)
     
     currentSavings = currentSavings + interestEarned - inflationAdjustedExpenses
     
-    if (currentSavings < 0) currentSavings = 0
+    // Don't reset to 0, allow negative values to show the deficit
     
     const inflationAdjustedValue = currentSavings / Math.pow(1 + inflationRate, data.length)
     

@@ -4,9 +4,10 @@ import { formatCurrency } from '../utils/retirementCalculations'
 
 interface RetirementChartProps {
   data: YearlyProjection[]
+  fundsLastYears: number
 }
 
-export default function RetirementChart({ data }: RetirementChartProps) {
+export default function RetirementChart({ data, fundsLastYears }: RetirementChartProps) {
   // Split data into accumulation and retirement phases
   const accumulationData = data.filter(d => d.phase === 'accumulation')
   const retirementData = data.filter(d => d.phase === 'retirement')
@@ -162,7 +163,7 @@ export default function RetirementChart({ data }: RetirementChartProps) {
         <div className="bg-amber-50 p-4 rounded-lg">
           <h4 className="font-medium text-amber-900 mb-1">Años de Jubilación</h4>
           <p className="text-2xl font-bold text-amber-700">
-            {retirementData.filter(d => d.totalSavings > 0).length}
+            {fundsLastYears}
           </p>
           <p className="text-sm text-amber-600">
             Con fondos disponibles

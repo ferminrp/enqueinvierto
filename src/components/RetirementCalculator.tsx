@@ -274,7 +274,7 @@ export default function RetirementCalculator() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Gastos mensuales estimados en jubilación (USD)
+                  ¿Cuánto esperas gastar por mes en tu retiro?
                 </label>
                 <input
                   type="number"
@@ -324,20 +324,6 @@ export default function RetirementCalculator() {
                 </div>
               )}
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tasa de inflación anual (%)
-                </label>
-                <input
-                  type="number"
-                  value={inputValues.inflationRate}
-                  onChange={(e) => handleNumberInputChange('inflationRate', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="0"
-                  max="15"
-                  step="0.1"
-                />
-              </div>
             </div>
             
             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
@@ -373,7 +359,8 @@ export default function RetirementCalculator() {
         <div className="mt-8">
           <RetirementChart 
             key={`${inputs.lifeExpectancy}-${inputs.retirementAge}-${inputs.currentAge}`}
-            data={results.projectionData} 
+            data={results.projectionData}
+            fundsLastYears={results.fundsLastYears}
           />
         </div>
       )}

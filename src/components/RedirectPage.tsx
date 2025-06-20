@@ -12,7 +12,7 @@ export default function RedirectPage({ onClose }: RedirectPageProps) {
   const [mounted, setMounted] = useState(false)
   const modalContentRef = useRef<HTMLDivElement>(null)
   const formUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLSc5yekqpbmP4MsNkLcS80oFh0KujT3Z2Y2-9v2UNEl6shjS2A/viewform?usp=pp_url&entry.946569307=Web+-+EnqueInvierto"
+    "https://docs.google.com/forms/d/e/1FAIpQLSfSe5TgzbjWIAhK3G9ywzo-O0knx_wky8KcC8RKpEIaJYeZeg/viewform?usp=pp_url&entry.946569307=En+Que+Invierto"
 
   useEffect(() => {
     setMounted(true)

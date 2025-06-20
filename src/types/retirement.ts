@@ -21,6 +21,9 @@ export interface RetirementResults {
   fundsLastYears: number
   inflationAdjustedTarget: number
   projectionData: YearlyProjection[]
+  lifeExpectancy: number
+  yearsInRetirement: number
+  monthlyExpenses: number
 }
 
 export interface YearlyProjection {

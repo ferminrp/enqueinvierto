@@ -8,7 +8,9 @@ interface RetirementResultsProps {
 }
 
 export default function RetirementResults({ results, mode }: RetirementResultsProps) {
-  const isHealthyRetirement = results.fundsLastYears >= 15
+  // Check if funds last until life expectancy (with a reasonable buffer)
+  const isHealthyRetirement = results.fundsLastYears >= results.yearsInRetirement
+  const fundShortfall = results.yearsInRetirement - results.fundsLastYears
 
   return (
     <div className="space-y-6">
@@ -75,16 +77,16 @@ export default function RetirementResults({ results, mode }: RetirementResultsPr
       </div>
 
       {/* Detailed Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-blue-50 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-900">Ingresos Mensuales</span>
+            <DollarSign className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-900">Gastos Mensuales Planeados</span>
           </div>
           <p className="text-xl font-bold text-blue-700">
-            {formatCurrency(results.projectedMonthlyRetirementIncome)}
+            {formatCurrency(results.monthlyExpenses)}
           </p>
-          <p className="text-xs text-blue-600 mt-1">Estimado en jubilación</p>
+          <p className="text-xs text-blue-600 mt-1">Durante la jubilación</p>
         </div>
 
         <div className={`rounded-lg p-4 ${
@@ -132,16 +134,6 @@ export default function RetirementResults({ results, mode }: RetirementResultsPr
           </p>
         </div>
 
-        <div className="bg-purple-50 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="h-4 w-4 text-purple-600" />
-            <span className="text-sm font-medium text-purple-900">Años para Jubilarse</span>
-          </div>
-          <p className="text-xl font-bold text-purple-700">
-            {results.yearsToRetirement}
-          </p>
-          <p className="text-xs text-purple-600 mt-1">Desde ahora</p>
-        </div>
       </div>
 
       {/* Status and Recommendations */}
@@ -170,10 +162,13 @@ export default function RetirementResults({ results, mode }: RetirementResultsPr
               {isHealthyRetirement ? (
                 <div className="space-y-1">
                   <p className="text-green-700">
-                    • Tus fondos durarán {results.fundsLastYears} años después de jubilarte
+                    • Tus fondos durarán {results.fundsLastYears} años después de jubilarte (hasta los {results.retirementAge + results.fundsLastYears} años)
                   </p>
                   <p className="text-green-700">
-                    • Tendrás aproximadamente {formatCurrency(results.projectedMonthlyRetirementIncome)} mensuales para gastos
+                    • Esto cubre completamente tu expectativa de vida hasta los {results.lifeExpectancy} años
+                  </p>
+                  <p className="text-green-700">
+                    • Con {formatCurrency(results.monthlyExpenses)} mensuales de gastos, tus fondos durarán toda tu jubilación
                   </p>
                   <p className="text-green-700">
                     • Tu plan está bien encaminado para una jubilación cómoda
@@ -182,10 +177,13 @@ export default function RetirementResults({ results, mode }: RetirementResultsPr
               ) : (
                 <div className="space-y-1">
                   <p className="text-amber-700">
-                    • Tus fondos solo durarán {results.fundsLastYears} años después de jubilarte
+                    • Tus fondos solo durarán {results.fundsLastYears} años después de jubilarte (hasta los {results.retirementAge + results.fundsLastYears} años)
                   </p>
                   <p className="text-amber-700">
-                    • Considera aumentar tus contribuciones mensuales o ajustar tu edad de jubilación
+                    • Con {formatCurrency(results.monthlyExpenses)} mensuales de gastos, te faltarán {fundShortfall} años para llegar a los {results.lifeExpectancy} años
+                  </p>
+                  <p className="text-amber-700">
+                    • Considera reducir gastos mensuales, aumentar contribuciones o ajustar tu edad de jubilación
                   </p>
                   <p className="text-amber-700">
                     • Un perfil de inversión más agresivo podría mejorar tus resultados

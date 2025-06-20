@@ -7,7 +7,7 @@ export default function HomeCTAFooter() {
   const [showRedirect, setShowRedirect] = useState(false)
   const asesorUrl = "https://qadvisory.com.ar/asesores-financieros/"
   const empresaUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLSciLI3kcNBVv9z7a_0wTCoRHSvkTs3wfArGJctoFXeScFR8Hw/viewform?usp=pp_url&entry.946569307=Web+-+Enqueinvierto"
+    "https://docs.google.com/forms/d/e/1FAIpQLSciLI3kcNBVv9z7a_0wTCoRHSvkTs3wfArGJctoFXeScFR8Hw/viewform?usp=pp_url&entry.946569307=En+Que+Invierto"
 
   const handleOpenAccount = () => {
     setShowRedirect(true)
