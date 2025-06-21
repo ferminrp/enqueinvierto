@@ -41,6 +41,74 @@ const getIconComponent = (iconName: string) => {
   };
   return iconMap[iconName] || BookOpen;
 };
+
+// Get related entries with multi-level matching
+const getRelatedEntries = (currentEntry: any, allEntries: any[]) => {
+  const otherEntries = allEntries.filter(e => e.slug !== currentEntry.slug);
+  
+  // Level 1: Same category
+  const sameCategory = otherEntries.filter(e => 
+    e.data.category && currentEntry.data.category && 
+    e.data.category === currentEntry.data.category
+  );
+  
+  // Level 2: Common tags
+  const commonTags = otherEntries.filter(e => {
+    if (!e.data.tags || !currentEntry.data.tags) return false;
+    return e.data.tags.some((tag: string) => currentEntry.data.tags.includes(tag));
+  });
+  
+  // Level 3: Same difficulty
+  const sameDifficulty = otherEntries.filter(e => 
+    e.data.difficulty && currentEntry.data.difficulty && 
+    e.data.difficulty === currentEntry.data.difficulty
+  );
+  
+  // Level 4: Recent entries as fallback
+  const recentEntries = otherEntries.sort((a, b) => 
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  );
+  
+  // Combine results with priority, avoiding duplicates
+  const seen = new Set();
+  const related = [];
+  
+  // Add same category first
+  for (const entry of sameCategory) {
+    if (!seen.has(entry.slug) && related.length < 3) {
+      related.push(entry);
+      seen.add(entry.slug);
+    }
+  }
+  
+  // Add common tags if we need more
+  for (const entry of commonTags) {
+    if (!seen.has(entry.slug) && related.length < 3) {
+      related.push(entry);
+      seen.add(entry.slug);
+    }
+  }
+  
+  // Add same difficulty if we still need more
+  for (const entry of sameDifficulty) {
+    if (!seen.has(entry.slug) && related.length < 3) {
+      related.push(entry);
+      seen.add(entry.slug);
+    }
+  }
+  
+  // Add recent entries as final fallback
+  for (const entry of recentEntries) {
+    if (!seen.has(entry.slug) && related.length < 3) {
+      related.push(entry);
+      seen.add(entry.slug);
+    }
+  }
+  
+  return related;
+};
+
+const relatedEntries = getRelatedEntries(entry, allEntries);
 ---
 
 <Layout title={title} description={description}>
@@ -148,13 +216,11 @@ const getIconComponent = (iconName: string) => {
                 </div>
 
           <!-- Related Concepts -->
-          <div class="mt-16 pt-8 border-t border-gray-200">
-            <h3 class="text-xl font-semibold text-gray-900 mb-6">Conceptos relacionados</h3>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {allEntries
-                .filter(e => e.slug !== entry.slug && e.data.category === entry.data.category)
-                .slice(0, 3)
-                .map(relatedEntry => (
+          {relatedEntries.length > 0 && (
+            <div class="mt-16 pt-8 border-t border-gray-200">
+              <h3 class="text-xl font-semibold text-gray-900 mb-6">Conceptos relacionados</h3>
+              <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {relatedEntries.map(relatedEntry => (
                   <a 
                     href={`/glosario/${relatedEntry.slug}`}
                     class="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-300 hover:border-blue-200"
@@ -172,10 +238,10 @@ const getIconComponent = (iconName: string) => {
                       {relatedEntry.data.summary}
                     </p>
                   </a>
-                ))
-              }
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </article>
         </div>
 
