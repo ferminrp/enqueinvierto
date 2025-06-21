@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FinancialHealthWizard from '../components/FinancialHealthWizard';
+
+const title = "Evaluá tu Salud Financiera | Enqueinvierto";
+const description = "Descubrí cómo está tu situación financiera con nuestra evaluación personalizada. Obtené recomendaciones específicas para mejorar tus finanzas personales.";
+const ogImage = "https://ik.imagekit.io/ferminrp/Meta%20Images/salud-financiera.png";
+---
+
+<Layout title={title} description={description} ogImage={ogImage}>
+  <main class="min-h-screen relative overflow-hidden">
+    <!-- Background gradient similar to home page -->
+    <div
+      class="fixed inset-0 w-full h-full pointer-events-none"
+      style="background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 50%, #eef2f7 100%); z-index: -1;"
+    ></div>
+
+    <div class="container mx-auto px-4 py-8 relative">
+      <FinancialHealthWizard client:load />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Custom styles for the financial health wizard */
+  .wizard-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Smooth transitions for question changes */
+  .question-transition {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Progress bar animations */
+  .progress-bar {
+    transition: width 0.5s ease-in-out;
+  }
+</style>
