@@ -1,4 +1,9 @@
 import React from 'react';
+
+// Global gtag function type declaration
+declare global {
+  function gtag(...args: any[]): void;
+}
 import { motion } from 'framer-motion';
 import { RotateCcw, Share2, ExternalLink, CheckCircle } from 'lucide-react';
 import { Button } from './ui/button';
@@ -13,6 +18,15 @@ interface ResultsDashboardProps {
 
 const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }) => {
   const handleShare = async () => {
+    // Track share action
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'share', {
+        method: navigator.share ? 'native_share' : 'copy_link',
+        content_type: 'financial_health_result',
+        item_id: `score_${result.overallPercentage}`
+      });
+    }
+    
     if (navigator.share) {
       try {
         await navigator.share({

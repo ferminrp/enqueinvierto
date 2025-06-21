@@ -1,4 +1,4 @@
-import { Handshake, ExternalLink } from "lucide-react"
+import { Handshake, ExternalLink, CheckCircle } from "lucide-react"
 import { useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import RedirectPage from "./RedirectPage"
@@ -21,6 +21,23 @@ export default function HomeCTAFooter() {
     <>
       <div className="bg-white rounded-xl border border-[#E5E7EB] overflow-hidden shadow-sm">
         <div className="p-6 md:p-8">
+          {/* Sección de salud financiera */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="space-y-2 md:max-w-[70%]">
+              <h3 className="text-xl font-bold text-gray-800">¿Cómo está tu salud financiera?</h3>
+              <p className="text-gray-600">
+                Evaluá tu situación financiera actual y obtené recomendaciones personalizadas para mejorar. Solo te toma 3-5 minutos.
+              </p>
+            </div>
+            <a
+              href="/salud-financiera"
+              className="bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 px-5 rounded-md text-center transition-all duration-300 shadow-sm hover:shadow-md inline-flex items-center gap-2 w-auto self-start md:self-center whitespace-nowrap cursor-pointer"
+            >
+              <CheckCircle className="h-5 w-5" />
+              Evaluar Ahora
+            </a>
+          </div>
+          <div className="border-t border-gray-200 my-6"></div>
           {/* Sección para inversores */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="space-y-2 md:max-w-[70%]">

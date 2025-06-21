@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
+// Global gtag function type declaration
+declare global {
+  function gtag(...args: any[]): void;
+}
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
@@ -56,6 +61,14 @@ const FinancialHealthWizard: React.FC = () => {
     : 0;
 
   const handleStart = () => {
+    // Track assessment start
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'assessment_started', {
+        event_category: 'financial_health',
+        event_label: 'assessment_started'
+      });
+    }
+    
     setAssessmentState(prev => ({
       ...prev,
       currentQuestionIndex: 0,
@@ -97,6 +110,16 @@ const FinancialHealthWizard: React.FC = () => {
       } else {
         // Assessment complete
         const result = calculateAssessmentResult(newAnswers);
+        
+        // Track assessment completion
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'assessment_completed', {
+            event_category: 'financial_health',
+            event_label: 'assessment_completed',
+            value: result.overallPercentage
+          });
+        }
+        
         setAssessmentState(prev => ({
           ...prev,
           isComplete: true,
@@ -116,6 +139,14 @@ const FinancialHealthWizard: React.FC = () => {
   };
 
   const handleRestart = () => {
+    // Track assessment restart
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'assessment_restarted', {
+        event_category: 'financial_health',
+        event_label: 'assessment_restarted'
+      });
+    }
+    
     localStorage.removeItem(STORAGE_KEY);
     setAssessmentState({
       currentQuestionIndex: -1,
