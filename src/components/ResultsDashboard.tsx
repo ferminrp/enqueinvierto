@@ -5,11 +5,12 @@ declare global {
   function gtag(...args: any[]): void;
 }
 import { motion } from 'framer-motion';
-import { RotateCcw, Share2, ExternalLink, CheckCircle } from 'lucide-react';
+import { RotateCcw, Share2, ExternalLink, CheckCircle, MessageCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import type { AssessmentResult } from '../types/financialHealth';
 import { categoryInfo } from '../data/healthQuestions';
 import { getLevelColor, getLevelIcon, getLevelText } from '../utils/assessmentScoring';
+import FinancialAdvisorCTA from './FinancialAdvisorCTA';
 
 interface ResultsDashboardProps {
   result: AssessmentResult;
@@ -17,17 +18,35 @@ interface ResultsDashboardProps {
 }
 
 const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }) => {
+  const handleScrollToAdvisor = () => {
+    // Track scroll to advisor action
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'scroll_to_advisor', {
+        event_category: 'financial_advisor',
+        event_label: 'scroll_from_score_section'
+      });
+    }
+
+    const element = document.getElementById('financial-advisor-cta');
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
+
   const handleShare = async () => {
     // Track share action
     if (typeof gtag !== 'undefined') {
       gtag('event', 'share', {
-        method: navigator.share ? 'native_share' : 'copy_link',
+        method: 'share' in navigator ? 'native_share' : 'copy_link',
         content_type: 'financial_health_result',
         item_id: `score_${result.overallPercentage}`
       });
     }
     
-    if (navigator.share) {
+    if ('share' in navigator) {
       try {
         await navigator.share({
           title: 'Mi Evaluación de Salud Financiera',
@@ -39,8 +58,19 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }
       }
     } else {
       // Fallback for browsers that don't support Web Share API
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copiado al portapapeles');
+      try {
+        // Try to copy to clipboard
+        const clipboardAPI = (navigator as any).clipboard;
+        if (clipboardAPI) {
+          await clipboardAPI.writeText(window.location.href);
+          alert('Link copiado al portapapeles');
+        } else {
+          alert('Compartir no disponible en este navegador');
+        }
+      } catch (error) {
+        console.error('Failed to copy link:', error);
+        alert('No se pudo copiar el link');
+      }
     }
   };
 
@@ -88,7 +118,11 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }
             Tu Salud Financiera
           </h1>
           <p className="text-gray-600 text-lg">
-            Completaste la evaluación el {result.completedAt.toLocaleDateString('es-AR')}
+            Completaste la evaluación el {
+              result.completedAt instanceof Date 
+                ? result.completedAt.toLocaleDateString('es-AR')
+                : new Date(result.completedAt).toLocaleDateString('es-AR')
+            }
           </p>
         </div>
 
@@ -112,7 +146,11 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }
             {overallMessage.description}
           </p>
 
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+            <Button onClick={handleScrollToAdvisor} className="flex items-center bg-blue-600 hover:bg-blue-700 text-white">
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Pedir asesoramiento
+            </Button>
             <Button onClick={handleShare} variant="outline" className="flex items-center">
               <Share2 className="mr-2 h-4 w-4" />
               Compartir
@@ -272,6 +310,17 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRestart }
             </div>
           </motion.div>
         )}
+
+        {/* Financial Advisor CTA */}
+        <motion.div
+          id="financial-advisor-cta"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+          className="mt-8"
+        >
+          <FinancialAdvisorCTA variant="health" />
+        </motion.div>
 
         {/* Footer */}
         <div className="text-center mt-8 text-gray-500 text-sm">

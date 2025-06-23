@@ -49,9 +49,9 @@ export const questions: Question[] = [
     weight: 1.2,
     options: [
       { value: 'none', label: 'No tengo ahorros de emergencia', score: 0 },
-      { value: 'partial', label: 'Tengo algo, pero menos de 3 meses de gastos', score: 1 },
-      { value: 'good', label: 'Tengo entre 3-6 meses de gastos cubiertos', score: 2 },
-      { value: 'excellent', label: 'Tengo más de 6 meses cubiertos', score: 3 }
+      { value: 'partial', label: 'Tengo algo ahorrado, pero menos de 3 meses de gastos esenciales cubiertos', score: 1 },
+      { value: 'good', label: 'Tengo entre 3-6 meses de gastos básicos completamente cubiertos con mis ahorros actuales', score: 2 },
+      { value: 'excellent', label: 'Tengo más de 6 meses de gastos cubiertos y me siento financieramente seguro', score: 3 }
     ],
     positiveResponse: '¡Excelente! Tener un colchón financiero te da mucha tranquilidad 💪'
   },

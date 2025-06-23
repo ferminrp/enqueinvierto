@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from './ui/button';
 import type { Question, Answer, QuestionOption } from '../types/financialHealth';
 import { categoryInfo } from '../data/healthQuestions';
 
@@ -38,7 +37,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-2 sm:px-0">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -46,29 +45,30 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               {categoryData && (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryData.color}`}>
-                  {categoryData.icon} {categoryData.name}
+                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${categoryData.color}`}>
+                  <span className="hidden sm:inline">{categoryData.icon} {categoryData.name}</span>
+                  <span className="sm:hidden">{categoryData.icon}</span>
                 </span>
               )}
             </div>
-            <div className="text-sm text-gray-500 font-medium">
+            <div className="text-xs sm:text-sm text-gray-500 font-medium">
               {questionNumber} de {totalQuestions}
             </div>
           </div>
         </div>
 
         {/* Question Content */}
-        <div className="px-6 py-8">
+        <div className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight break-words">
               {question.text}
             </h2>
             {question.subtitle && (
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed break-words">
                 {question.subtitle}
               </p>
             )}
@@ -83,17 +83,17 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Button
-                  variant={selectedValue === option.value ? "default" : "outline"}
-                  className={`w-full text-left justify-start h-auto p-4 rounded-xl transition-all duration-200 ${
-                    selectedValue === option.value
-                      ? 'bg-blue-600 text-white shadow-lg transform scale-[1.02]'
-                      : 'hover:bg-gray-50 hover:border-gray-300 hover:shadow-md'
-                  }`}
+                <button
+                  className={`w-full text-left p-3 sm:p-4 rounded-xl transition-all duration-200 border-2 cursor-pointer
+                    ${selectedValue === option.value
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg transform scale-[1.02]'
+                      : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:shadow-md'
+                    }`}
                   onClick={() => handleOptionSelect(option)}
+                  type="button"
                 >
-                  <div className="flex items-center w-full">
-                    <div className={`w-5 h-5 rounded-full border-2 mr-4 flex-shrink-0 ${
+                  <div className="flex items-start w-full">
+                    <div className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 mr-3 sm:mr-4 flex-shrink-0 mt-1 ${
                       selectedValue === option.value
                         ? 'bg-white border-white'
                         : 'border-gray-300'
@@ -102,14 +102,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                         <div className="w-full h-full rounded-full bg-blue-600 scale-50"></div>
                       )}
                     </div>
-                    <div className="flex-1">
-                      <div className={`font-medium ${
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-medium text-sm sm:text-base leading-6 break-words ${
                         selectedValue === option.value ? 'text-white' : 'text-gray-900'
                       }`}>
                         {option.label}
                       </div>
                       {option.description && (
-                        <div className={`text-sm mt-1 ${
+                        <div className={`text-xs sm:text-sm mt-2 leading-5 break-words ${
                           selectedValue === option.value ? 'text-blue-100' : 'text-gray-500'
                         }`}>
                           {option.description}
@@ -117,7 +117,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                       )}
                     </div>
                   </div>
-                </Button>
+                </button>
               </motion.div>
             ))}
           </div>
