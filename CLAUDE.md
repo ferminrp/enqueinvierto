@@ -108,3 +108,5 @@ Multiple CDN domains are configured for images:
 - The project is migrated from Next.js - some configurations may reference this legacy
 - Document business learnings in README.md as per cursor rules
 - Cloudflare has specific limitations vs Vercel - consult their Next.js guide when needed
+- Try to always use tailwind and shadcn instead of vanilla css unless unavoidable.
+- You can Use puppeteer mcp to debug issues

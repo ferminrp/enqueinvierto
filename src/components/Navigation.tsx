@@ -15,6 +15,11 @@ const navigationItems = [
     description: "Carteras de inversión recomendadas"
   },
   {
+    title: "Salud Financiera",
+    href: "/salud-financiera",
+    description: "Evaluá tu situación financiera"
+  },
+  {
     title: "Glosario",
     href: "/glosario",
     description: "Términos financieros explicados"
