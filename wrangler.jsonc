@@ -1,20 +1,12 @@
 /**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
+ * For more details on how to configure Wrangler Pages, refer to:
+ * https://developers.cloudflare.com/pages/
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "enqueinvierto",
-	"main": ".open-next/worker.js",
+	"pages_build_output_dir": "dist",
 	"compatibility_date": "2025-03-01",
-	"compatibility_flags": [
-		"nodejs_compat",
-		"global_fetch_strictly_public"
-	],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".open-next/assets"
-	},
 	"observability": {
 		"enabled": true
 	}
