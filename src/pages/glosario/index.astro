@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { BookOpen, Search, Tag, Calendar, ArrowRight, BarChart3, TrendingUp, PieChart, Target, Calculator } from 'lucide-react';
+import { BookOpen, Search, Tag, ArrowRight, BarChart3, TrendingUp, PieChart, Target, Calculator } from 'lucide-react';
 
 const glossaryEntries = await getCollection('glossary');
 
@@ -83,42 +83,22 @@ const getIconComponent = (iconName: string) => {
         <!-- Entries Grid -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="entriesGrid">
           {sortedEntries.map(entry => (
-            <a href={`/glosario/${entry.slug}`} class="entry-card-link group">
-              <article class="entry-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200 cursor-pointer" data-category={entry.data.category}>
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      {(() => {
-                        const IconComponent = getIconComponent(entry.data.icon);
-                        return <IconComponent className="h-5 w-5 text-blue-600" />;
-                      })()}
-                    </div>
-                    <div>
-                      <h2 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                        {entry.data.title}
-                      </h2>
-                      {entry.data.category && (
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                          {entry.data.category}
-                        </span>
-                      )}
-                    </div>
+            <a href={`/glosario/${entry.slug}`} class="entry-card-link group h-full">
+              <article class="entry-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200 cursor-pointer h-full flex flex-col" data-category={entry.data.category}>
+                <div class="flex items-start gap-3 flex-1">
+                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors flex-shrink-0">
+                    {(() => {
+                      const IconComponent = getIconComponent(entry.data.icon);
+                      return <IconComponent className="h-5 w-5 text-blue-600" />;
+                    })()}
+                  </div>
+                  <div class="flex-1">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">
+                      {entry.data.title}
+                    </h2>
                   </div>
                 </div>
-                
-                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {entry.data.summary}
-                </p>
-                
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center text-xs text-gray-500">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    {new Date(entry.data.date).toLocaleDateString('es-ES', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </div>
+                <div class="flex items-center justify-end mt-4">
                   <span class="inline-flex items-center text-blue-600 group-hover:text-blue-800 text-sm font-medium transition-colors">
                     Leer más
                     <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
@@ -159,10 +139,9 @@ const getIconComponent = (iconName: string) => {
       entryCardLinks.forEach(cardLink => {
         const card = cardLink.querySelector('.entry-card') as HTMLElement;
         const title = card.querySelector('h2')?.textContent?.toLowerCase() || '';
-        const summary = card.querySelector('p')?.textContent?.toLowerCase() || '';
         const category = card.getAttribute('data-category') || '';
         
-        const matchesSearch = title.includes(searchTerm) || summary.includes(searchTerm);
+        const matchesSearch = title.includes(searchTerm);
         const matchesCategory = currentCategory === 'all' || category === currentCategory;
         
         if (matchesSearch && matchesCategory) {
@@ -211,9 +190,9 @@ const getIconComponent = (iconName: string) => {
   </script>
 
   <style>
-    .line-clamp-3 {
+    .line-clamp-2 {
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
